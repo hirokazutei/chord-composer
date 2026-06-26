@@ -16,12 +16,14 @@ export const INDEX_KEYS = [
 export const INDEX_CHORD = [
   { chord: "maj", display: "Major" },
   { chord: "min", display: "Minor" },
-  { chord: "sev", display: "7th" },
-  { chord: "m7", display: "Min 7th" },
-  { chord: "maj7", display: "Maj 7th" },
-  { chord: "sus4", display: "Sus 4th" },
-  { chord: "fiv", display: "5th" },
-  { chord: "six", display: "6th" }
+  { chord: "sev", display: "Dom 7" },
+  { chord: "m7", display: "Min 7" },
+  { chord: "maj7", display: "Maj 7" },
+  { chord: "sus4", display: "Sus 4" },
+  { chord: "sus2", display: "Sus 2" },
+  { chord: "fiv", display: "Power" },
+  { chord: "six", display: "Maj 6" },
+  { chord: "dom9", display: "Dom 9" },
 ];
 
 export const INDEX_MODES = [
@@ -235,6 +237,34 @@ const KEYS: Record<string, any> = {
           { string: 1, fret: 4, finger: "3" },
           { string: 3, fret: 4, finger: "4" }
         ]
+      }
+    },
+    sus2: {
+      text: "Asus2",
+      chordNames: [{ key: "A", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 0 },
+          { string: 2, fret: 2, finger: "1" },
+          { string: 3, fret: 2, finger: "2" },
+          { string: 4, fret: 0 },
+          { string: 5, fret: 0 }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "A9",
+      chordNames: [{ key: "A", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 0 },
+          { string: 2, fret: 2, finger: "1" },
+          { string: 3, fret: 4, finger: "4" },
+          { string: 4, fret: 2, finger: "2" },
+          { string: 5, fret: 3, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -467,6 +497,37 @@ const KEYS: Record<string, any> = {
           { string: 2, fret: 0, finger: "1", barre: 3 }
         ]
       }
+    },
+    sus2: {
+      text: "A♯/B♭sus2",
+      chordNames: [
+        { key: "A", sharp: true, flat: false, aux: "" },
+        { key: "B", sharp: false, flat: true, aux: "sus2" }
+      ],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 1, finger: "1", barre: 5 },
+          { string: 2, fret: 3, finger: "3" },
+          { string: 3, fret: 3, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "A♯/B♭9",
+      chordNames: [
+        { key: "A", sharp: true, flat: false, aux: "" },
+        { key: "B", sharp: false, flat: true, aux: "9" }
+      ],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 1, finger: "1" },
+          { string: 2, fret: 3, finger: "2" },
+          { string: 3, fret: 5, finger: "4" },
+          { string: 4, fret: 3, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -651,6 +712,32 @@ const KEYS: Record<string, any> = {
           { string: 2, fret: 2, finger: "2" },
           { string: 4, fret: 2, finger: "3" }
         ]
+      }
+    },
+    sus2: {
+      text: "Bsus2sus2",
+      chordNames: [{ key: "B", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 2, finger: "1", barre: 5 },
+          { string: 2, fret: 4, finger: "3" },
+          { string: 3, fret: 4, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "B99",
+      chordNames: [{ key: "B", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 2, finger: "1" },
+          { string: 2, fret: 4, finger: "2" },
+          { string: 3, fret: 6, finger: "4" },
+          { string: 4, fret: 4, finger: "3" },
+          { string: 5, fret: 5, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -845,6 +932,32 @@ const KEYS: Record<string, any> = {
           { string: 2, fret: 0 },
           { string: 3, fret: 0 }
         ]
+      }
+    },
+    sus2: {
+      text: "Csus2",
+      chordNames: [{ key: "C", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 3, finger: "1", barre: 5 },
+          { string: 2, fret: 5, finger: "3" },
+          { string: 3, fret: 5, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "C9",
+      chordNames: [{ key: "C", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 3, finger: "1" },
+          { string: 2, fret: 5, finger: "2" },
+          { string: 3, fret: 7, finger: "4" },
+          { string: 4, fret: 5, finger: "3" },
+          { string: 5, fret: 6, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -1076,6 +1189,34 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: [{ string: 0, fret: 1, finger: "1", barre: 3 }]
       }
+    },
+    sus2: {
+      text: "C♯/D♯sus2sus2",
+      chordNames: [{ key: "C", sharp: true, flat: false, aux: "" },
+          { key: "D", sharp: false, flat: true, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 4, finger: "1", barre: 5 },
+          { string: 2, fret: 6, finger: "3" },
+          { string: 3, fret: 6, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "C♯/D♯99",
+      chordNames: [{ key: "C", sharp: true, flat: false, aux: "" },
+          { key: "D", sharp: false, flat: true, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 4, finger: "1" },
+          { string: 2, fret: 6, finger: "2" },
+          { string: 3, fret: 8, finger: "4" },
+          { string: 4, fret: 6, finger: "3" },
+          { string: 5, fret: 7, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -1266,6 +1407,32 @@ const KEYS: Record<string, any> = {
           { string: 5, fret: 2, finger: "2" }
         ],
         ukulele: [{ string: 0, fret: 2, finger: "1", barre: 3 }]
+      }
+    },
+    sus2: {
+      text: "Dsus2",
+      chordNames: [{ key: "D", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 5, finger: "1", barre: 5 },
+          { string: 2, fret: 7, finger: "3" },
+          { string: 3, fret: 7, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "D9",
+      chordNames: [{ key: "D", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 5, finger: "1" },
+          { string: 2, fret: 7, finger: "2" },
+          { string: 3, fret: 9, finger: "4" },
+          { string: 4, fret: 7, finger: "3" },
+          { string: 5, fret: 8, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -1500,6 +1667,34 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: [{ string: 0, fret: 3, finger: "1", barre: 3 }]
       }
+    },
+    sus2: {
+      text: "D♯/E♯sus2sus2",
+      chordNames: [{ key: "D", sharp: true, flat: false, aux: "" },
+          { key: "E", sharp: false, flat: true, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 6, finger: "1", barre: 5 },
+          { string: 2, fret: 8, finger: "3" },
+          { string: 3, fret: 8, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "D♯/E♯99",
+      chordNames: [{ key: "D", sharp: true, flat: false, aux: "" },
+          { key: "E", sharp: false, flat: true, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 6, finger: "1" },
+          { string: 2, fret: 8, finger: "2" },
+          { string: 3, fret: 10, finger: "4" },
+          { string: 4, fret: 8, finger: "3" },
+          { string: 5, fret: 9, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -1707,6 +1902,32 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: [{ string: 0, fret: 4, finger: "1", barre: 3 }]
       }
+    },
+    sus2: {
+      text: "Esus2sus2",
+      chordNames: [{ key: "E", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 7, finger: "1", barre: 5 },
+          { string: 2, fret: 9, finger: "3" },
+          { string: 3, fret: 9, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "E99",
+      chordNames: [{ key: "E", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 7, finger: "1" },
+          { string: 2, fret: 9, finger: "2" },
+          { string: 3, fret: 11, finger: "4" },
+          { string: 4, fret: 9, finger: "3" },
+          { string: 5, fret: 10, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -1904,6 +2125,32 @@ const KEYS: Record<string, any> = {
           { string: 2, fret: 1, finger: "1" },
           { string: 3, fret: 3, finger: "4" }
         ]
+      }
+    },
+    sus2: {
+      text: "Fsus2",
+      chordNames: [{ key: "F", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 8, finger: "1", barre: 5 },
+          { string: 2, fret: 10, finger: "3" },
+          { string: 3, fret: 10, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "F9",
+      chordNames: [{ key: "F", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 8, finger: "1" },
+          { string: 2, fret: 10, finger: "2" },
+          { string: 3, fret: 12, finger: "4" },
+          { string: 4, fret: 10, finger: "3" },
+          { string: 5, fret: 11, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -2152,6 +2399,34 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 4, finger: "4" }
         ]
       }
+    },
+    sus2: {
+      text: "F♯/G♯sus2sus2",
+      chordNames: [{ key: "F", sharp: true, flat: false, aux: "" },
+          { key: "G", sharp: false, flat: true, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 9, finger: "1", barre: 5 },
+          { string: 2, fret: 11, finger: "3" },
+          { string: 3, fret: 11, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "F♯/G♯99",
+      chordNames: [{ key: "F", sharp: true, flat: false, aux: "" },
+          { key: "G", sharp: false, flat: true, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 9, finger: "1" },
+          { string: 2, fret: 11, finger: "2" },
+          { string: 3, fret: 13, finger: "4" },
+          { string: 4, fret: 11, finger: "3" },
+          { string: 5, fret: 12, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -2354,6 +2629,32 @@ const KEYS: Record<string, any> = {
           { string: 2, fret: 0 },
           { string: 3, fret: 2, finger: "3" }
         ]
+      }
+    },
+    sus2: {
+      text: "Gsus2",
+      chordNames: [{ key: "G", sharp: false, flat: false, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 10, finger: "1", barre: 5 },
+          { string: 2, fret: 12, finger: "3" },
+          { string: 3, fret: 12, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "G9",
+      chordNames: [{ key: "G", sharp: false, flat: false, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 10, finger: "1" },
+          { string: 2, fret: 12, finger: "2" },
+          { string: 3, fret: 14, finger: "4" },
+          { string: 4, fret: 12, finger: "3" },
+          { string: 5, fret: 13, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   },
@@ -2598,6 +2899,34 @@ const KEYS: Record<string, any> = {
           { string: 1, fret: 3, finger: "3" },
           { string: 3, fret: 3, finger: "4" }
         ]
+      }
+    },
+    sus2: {
+      text: "G♯/A♯sus2sus2",
+      chordNames: [{ key: "G", sharp: true, flat: false, aux: "" },
+          { key: "A", sharp: false, flat: true, aux: "sus2" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 11, finger: "1", barre: 5 },
+          { string: 2, fret: 13, finger: "3" },
+          { string: 3, fret: 13, finger: "4" }
+        ],
+        ukulele: []
+      }
+    },
+    dom9: {
+      text: "G♯/A♯99",
+      chordNames: [{ key: "G", sharp: true, flat: false, aux: "" },
+          { key: "A", sharp: false, flat: true, aux: "9" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 11, finger: "1" },
+          { string: 2, fret: 13, finger: "2" },
+          { string: 3, fret: 15, finger: "4" },
+          { string: 4, fret: 13, finger: "3" },
+          { string: 5, fret: 14, finger: "3" }
+        ],
+        ukulele: []
       }
     }
   }
