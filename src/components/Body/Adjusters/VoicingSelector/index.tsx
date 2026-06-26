@@ -13,23 +13,33 @@ const styles = {
   },
   button: {
     ...DEFAULT_STYLE.button,
-    fontSize: 14,
+    fontSize: 18,
     minHeight: 40,
+    flex: 1,
   },
-  buttonSelected: {
+  buttonDisabled: {
     ...DEFAULT_STYLE.button,
-    fontSize: 14,
+    fontSize: 18,
     minHeight: 40,
-    backgroundColor: PALETTE.accent,
-    borderColor: PALETTE.accent,
-    color: PALETTE.white,
-    boxShadow: `0 0 12px ${PALETTE.accentGlow}`,
+    flex: 1,
+    opacity: 0.25,
+    cursor: "not-allowed" as const,
+  },
+  counter: {
+    display: "flex",
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
+    fontSize: 13,
+    color: PALETTE.text,
+    minWidth: 36,
+    userSelect: "none" as const,
   },
   row: {
     display: "flex",
     flex: 1,
     flexDirection: "row" as const,
     gap: 4,
+    alignItems: "center" as const,
   },
   title: {
     ...DEFAULT_STYLE.title,
@@ -59,20 +69,29 @@ class VoicingSelector extends Component<Props> {
     const voicings = getVoicings(currentKey, currentChord);
     if (!voicings) return null;
 
+    const canUp = currentVoicingIndex > 0;
+    const canDown = currentVoicingIndex < voicings.length - 1;
+
     return (
       <div style={styles.view}>
         <div style={styles.border}>
-          <h3 style={styles.title}>Shape</h3>
+          <h3 style={styles.title}>Voicing</h3>
           <div style={styles.row}>
-            {voicings.map((v, i) => (
-              <button
-                key={v.label}
-                onClick={() => this.changeVoicing(i)}
-                style={currentVoicingIndex === i ? styles.buttonSelected : styles.button}
-              >
-                {v.label}
-              </button>
-            ))}
+            <button
+              style={canUp ? styles.button : styles.buttonDisabled}
+              onClick={() => canUp && this.changeVoicing(currentVoicingIndex - 1)}
+            >
+              ↑
+            </button>
+            <span style={styles.counter}>
+              {currentVoicingIndex + 1} / {voicings.length}
+            </span>
+            <button
+              style={canDown ? styles.button : styles.buttonDisabled}
+              onClick={() => canDown && this.changeVoicing(currentVoicingIndex + 1)}
+            >
+              ↓
+            </button>
           </div>
         </div>
       </div>
