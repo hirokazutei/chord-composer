@@ -229,10 +229,10 @@ function esus4Shape(R: number): ChordNote[] {
       { string: 5, fret: 0 },
     ];
   }
-  // str1-str3 at R+2 — mini-barre with barre:2 spanning str1 through str3
+  // str1-str3 at R+2 — mini-barre spanning str1 through str3
   return [
     { string: 0, fret: R, finger: "1", barre: 5 },
-    { string: 1, fret: R + 2, finger: "3", barre: 2 },
+    { string: 1, fret: R + 2, finger: "3", barre: 3 },
   ];
 }
 
@@ -290,7 +290,7 @@ function dShapeMaj(R: number): ChordNote[] {
   // str3 & str5 both at R+2 — mini-barre covering str3-str5; str4 overrides at R+3
   return [
     { string: 2, fret: R, finger: "1" },
-    { string: 3, fret: R + 2, finger: "2", barre: 2 },
+    { string: 3, fret: R + 2, finger: "2", barre: 5 },
     { string: 4, fret: R + 3, finger: "4" },
   ];
 }
@@ -343,13 +343,13 @@ function dm7Shape(R: number): ChordNote[] {
     return [
       { string: 2, fret: 0 },
       { string: 3, fret: 2, finger: "3" },
-      { string: 4, fret: 1, finger: "1", barre: 1 },
+      { string: 4, fret: 1, finger: "1", barre: 5 },
     ];
   }
   return [
     { string: 2, fret: R, finger: "1" },
     { string: 3, fret: R + 2, finger: "3" },
-    { string: 4, fret: R + 1, finger: "2", barre: 1 },
+    { string: 4, fret: R + 1, finger: "2", barre: 5 },
   ];
 }
 
@@ -360,12 +360,12 @@ function dmaj7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
       { string: 2, fret: 0 },
-      { string: 3, fret: 2, finger: "1", barre: 2 },
+      { string: 3, fret: 2, finger: "1", barre: 5 },
     ];
   }
   return [
     { string: 2, fret: R, finger: "1" },
-    { string: 3, fret: R + 2, finger: "2", barre: 2 },
+    { string: 3, fret: R + 2, finger: "2", barre: 5 },
   ];
 }
 
@@ -377,13 +377,13 @@ function dsus4Shape(R: number): ChordNote[] {
     return [
       { string: 2, fret: 0 },
       { string: 3, fret: 2, finger: "2" },
-      { string: 4, fret: 3, finger: "3", barre: 1 },
+      { string: 4, fret: 3, finger: "3", barre: 5 },
     ];
   }
   return [
     { string: 2, fret: R, finger: "1" },
     { string: 3, fret: R + 2, finger: "2" },
-    { string: 4, fret: R + 3, finger: "3", barre: 1 },
+    { string: 4, fret: R + 3, finger: "3", barre: 5 },
   ];
 }
 
@@ -416,7 +416,7 @@ function cShapeMaj(aR: number): ChordNote[] {
   return [
     { string: 1, fret: aR, finger: "4" },
     { string: 2, fret: aR - 1, finger: "3" },
-    { string: 3, fret: aR - 3, finger: "1", barre: 2 },
+    { string: 3, fret: aR - 3, finger: "1", barre: 5 },
     { string: 4, fret: aR - 2, finger: "2" },
   ];
 }
@@ -448,12 +448,12 @@ function a6Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
       { string: 1, fret: 0 },
-      { string: 2, fret: 2, finger: "1", barre: 3 },
+      { string: 2, fret: 2, finger: "1", barre: 5 },
     ];
   }
   return [
     { string: 1, fret: R, finger: "1", barre: 5 },
-    { string: 2, fret: R + 2, finger: "2", barre: 3 },
+    { string: 2, fret: R + 2, finger: "2", barre: 5 },
   ];
 }
 
@@ -475,7 +475,7 @@ function eShapeAug(R: number): ChordNote[] {
     { string: 0, fret: R, finger: "1", barre: 5 },
     { string: 1, fret: R + 3, finger: "4" },
     { string: 2, fret: R + 2, finger: "3" },
-    { string: 3, fret: R + 1, finger: "2", barre: 1 },
+    { string: 3, fret: R + 1, finger: "2", barre: 4 },
   ];
 }
 
@@ -493,7 +493,7 @@ function aShapeAug(R: number): ChordNote[] {
   return [
     { string: 1, fret: R, finger: "1" },
     { string: 2, fret: R + 3, finger: "4" },
-    { string: 3, fret: R + 2, finger: "3", barre: 1 },
+    { string: 3, fret: R + 2, finger: "3", barre: 4 },
     { string: 5, fret: R + 1, finger: "2" },
   ];
 }
@@ -638,7 +638,7 @@ function emaj9Shape(R: number): ChordNote[] {
   return [
     { string: 0, fret: R, finger: "1", barre: 5 },
     { string: 1, fret: R + 2, finger: "4" },
-    { string: 2, fret: R + 1, finger: "2", barre: 1 },
+    { string: 2, fret: R + 1, finger: "2", barre: 3 },
     { string: 5, fret: R + 2, finger: "4" },
   ];
 }
