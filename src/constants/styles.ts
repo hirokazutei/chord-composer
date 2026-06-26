@@ -21,7 +21,7 @@ const DEFAULT_STYLE = {
     border: "1px solid rgba(255,255,255,0.08)",
     boxShadow: "0 4px 24px rgba(0,0,0,0.4)",
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     justifyContent: "space-evenly",
     padding: 14,
   },
@@ -31,7 +31,7 @@ const DEFAULT_STYLE = {
     fontWeight: "700",
     fontSize: 11,
     letterSpacing: "0.12em",
-    textTransform: "uppercase",
+    textTransform: "uppercase" as const,
     margin: "0 0 10px 4px",
   },
 };

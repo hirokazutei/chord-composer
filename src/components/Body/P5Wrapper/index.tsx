@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import sketch from "./sketch";
-
 import type { State } from "../../../constants/types";
 import { PALETTE } from "../../../constants/palette";
 
@@ -14,9 +13,9 @@ const styles = {
     border: "1px solid rgba(255,255,255,0.08)",
     boxShadow: `0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1)`,
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "column" as const,
+    alignItems: "center" as const,
+    justifyContent: "center" as const,
     height: 710,
     padding: 20,
   },
@@ -24,7 +23,7 @@ const styles = {
     height: 670,
     width: 520,
     borderRadius: 8,
-    overflow: "hidden",
+    overflow: "hidden" as const,
   },
 };
 
@@ -34,7 +33,7 @@ class P5Wrapper extends Component<Props> {
   canvas: any;
 
   componentDidMount() {
-    this.canvas = new window.p5(sketch, "canvas-container");
+    this.canvas = new (window as any).p5(sketch, "canvas-container");
     this.canvas.props = this.props;
   }
 
@@ -56,6 +55,4 @@ class P5Wrapper extends Component<Props> {
   }
 }
 
-export default connect(
-  (state: State): State => state
-)(P5Wrapper);
+export default connect((state: State): State => state)(P5Wrapper);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Dispatch } from "redux";
+import { Dispatch, AnyAction } from "redux";
 import { INDEX_MODES } from "../../../constants/keys";
 import { INSTRUMENTS } from "../../../constants/index";
 import actionTypes from "../../../redux/actionTypes";
@@ -11,7 +11,7 @@ import type { Modes, State } from "../../../constants/types";
 const styles = {
   border: {
     ...DEFAULT_STYLE.border,
-    flexDirection: "column",
+    flexDirection: "column" as const,
   },
   button: {
     ...DEFAULT_STYLE.button,
@@ -31,7 +31,7 @@ const styles = {
   },
   buttons: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row" as const,
     justifyContent: "space-evenly",
     gap: 6,
   },
@@ -44,7 +44,7 @@ const styles = {
 };
 
 type StateProps = { currentMode: Modes };
-type Props = Dispatch;
+type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
 class ModeChanger extends Component<Props> {
   changeMode = (mode: string) => {
@@ -81,9 +81,9 @@ const mapStateToProps = (state: State): StateProps => {
   const { settings, custom } = state;
   if (custom) return { currentMode: "custom" };
   if (settings.instrument.text === INSTRUMENTS.guitar.text)
-    return { currentMode: INSTRUMENTS.guitar.text };
+    return { currentMode: INSTRUMENTS.guitar.text as Modes };
   if (settings.instrument.text === INSTRUMENTS.ukulele.text)
-    return { currentMode: INSTRUMENTS.ukulele.text };
+    return { currentMode: INSTRUMENTS.ukulele.text as Modes };
   return { currentMode: "custom" };
 };
 

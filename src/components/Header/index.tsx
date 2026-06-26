@@ -8,7 +8,7 @@ const styles = {
     WebkitBackdropFilter: "blur(12px)",
     borderBottom: "1px solid rgba(255,255,255,0.07)",
     display: "flex",
-    alignItems: "center",
+    alignItems: "center" as const,
     paddingTop: 18,
     paddingBottom: 18,
     paddingLeft: 36,
@@ -17,9 +17,9 @@ const styles = {
   title: {
     color: PALETTE.textPrimary,
     fontSize: 22,
-    fontWeight: "700",
+    fontWeight: "700" as const,
     letterSpacing: "0.08em",
-    textTransform: "uppercase",
+    textTransform: "uppercase" as const,
   },
   dot: {
     display: "inline-block",
@@ -29,7 +29,7 @@ const styles = {
     backgroundColor: PALETTE.accent,
     marginLeft: 8,
     marginBottom: 2,
-    verticalAlign: "middle",
+    verticalAlign: "middle" as const,
     boxShadow: `0 0 8px ${PALETTE.accentGlow}`,
   },
 };

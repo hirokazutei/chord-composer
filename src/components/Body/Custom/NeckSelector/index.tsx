@@ -1,7 +1,6 @@
-/* @flow */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Dispatch } from "redux";
+import { Dispatch, AnyAction } from "redux";
 import actionTypes from "../../../../redux/actionTypes";
 import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
@@ -30,7 +29,7 @@ const styles = {
   },
   buttons: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     justifyContent: "no-space-between",
     alignItems: "centre",
   },
@@ -51,14 +50,14 @@ const styles = {
     alignItems: "center",
     display: "flex",
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row" as const,
     justifyContent: "space-evenly",
   },
   change: {
     alignItems: "center",
     display: "flex",
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row" as const,
     justifyContent: "center",
     marginLeft: 10,
     marginRight: 10,
@@ -84,9 +83,9 @@ const styles = {
 };
 
 type StateProps = {
-  customSettings: Settings,
+  customSettings: Settings;
 };
-type Props = Dispatch & StateProps;
+type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
 /**
  * Neck Selectors

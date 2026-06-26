@@ -7,9 +7,9 @@ const styles = {
   app: {
     backgroundColor: PALETTE.background,
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
     height: "100vh",
-    overflow: "hidden",
+    overflow: "hidden" as const,
   },
 };
 

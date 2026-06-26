@@ -1,4 +1,3 @@
-/* @flow */
 import React from "react";
 import codic from "../../../static/icons/favicon-64x64w.png";
 import github from "../../../static/icons/github.png";
@@ -9,7 +8,7 @@ const styles = {
   socialMedia: {
     display: "flex",
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row" as const,
     justifyContent: "flex-end"
   },
   iconWrapper: {

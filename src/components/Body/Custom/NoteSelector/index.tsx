@@ -1,7 +1,6 @@
-/* @flow */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Dispatch } from "redux";
+import { Dispatch, AnyAction } from "redux";
 import actionTypes from "../../../../redux/actionTypes";
 import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
@@ -46,7 +45,7 @@ const styles = {
   row: {
     alignItems: "center",
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row" as const,
     justifyContent: "space-evenly",
   },
   textSpace: {
@@ -75,9 +74,9 @@ const styles = {
 };
 
 type StateProps = {
-  customChordNotes: Array<ChordNote>,
+  customChordNotes: Array<ChordNote>;
 };
-type Props = Dispatch & StateProps;
+type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
 /**
  * Note Selectors
@@ -140,7 +139,7 @@ class NoteSelectors extends Component<Props> {
    * On Delete Note
    * @param {number} index - Index of Note Deleted
    */
-  onDeleteNote = (index) => {
+  onDeleteNote = (index: number) => {
     this.props.dispatch({
       index,
       type: actionTypes.DELETE_NOTE,
@@ -199,7 +198,7 @@ class NoteSelectors extends Component<Props> {
                     style={styles.noteInput}
                     type="text"
                     onChange={this.onChangeNoteFret.bind(this, index)}
-                    value={this.props.customChordNotes[index].fret}
+                    value={this.props.customChordNotes[index].fret ?? ""}
                   />
                   <input
                     style={styles.noteInput}

@@ -1,4 +1,3 @@
-/* @flow */
 import actionTypes from "./actionTypes";
 import keys from "../constants/keys";
 import { INSTRUMENTS } from "../constants/index";

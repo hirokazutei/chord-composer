@@ -1,5 +1,3 @@
-/* @flow */
-
 export const WIDTH = 520;
 export const HEIGHT = 680;
 export const NECK_WIDTH = 360;
@@ -52,8 +50,8 @@ export const SIZE = {
 
 // Color
 export const COLOR = {
-  white: (255, 255, 255),
-  black: (0, 0, 0)
+  white: 255,
+  black: 0
 };
 
 // Instruments

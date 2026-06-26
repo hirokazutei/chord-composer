@@ -1,10 +1,4 @@
-/* @flow */
 import * as CONST from "../../../../constants";
-import type {
-  ChordName,
-  ChordNote,
-  Settings
-} from "../../../../constants/types";
 
 /***
  * Apply Preset Settings for Non-Custom Renders
@@ -12,22 +6,22 @@ import type {
  * @param {Object} chordNotes - The notes being rendered
  */
 export const applyPresetSettings = (
-  settings: Settings,
-  chordNotes: Array<ChordNote>
+  settings: any,
+  chordNotes: any[]
 ) => {
   const { frets, startingFret } = settings;
   if (!chordNotes.length) {
     return settings;
   }
   const noteFrets = chordNotes.map(chordNote => chordNote.fret);
-  const lowestFret = noteFrets.reduce((min, fret) => {
+  const lowestFret = noteFrets.reduce((min: any, fret: any) => {
     if (!fret || !min) {
       return fret ? fret : min;
     }
     return min < fret ? min : fret;
   });
   const minFret = lowestFret ? lowestFret : 1;
-  const highestFret = noteFrets.reduce((max, fret) => {
+  const highestFret = noteFrets.reduce((max: any, fret: any) => {
     if (!fret || !max) {
       return fret ? fret : max;
     }
@@ -45,7 +39,7 @@ export const applyPresetSettings = (
  * @param {Sketch} sketch - P5JS Sketch
  * @param {Object} settings - Render settings
  */
-export const renderNeck = (sketch: any, settings: Settings) => {
+export const renderNeck = (sketch: any, settings: any) => {
   standerdizeRenderSetting(sketch);
   const { frets, startingFret, instrument } = settings;
   const { strings } = instrument;
@@ -87,13 +81,14 @@ export const renderNeck = (sketch: any, settings: Settings) => {
  * @param {Sketch} sketch - P5JS Sketch
  * @param {list} chordNames - List of Chord Names
  */
-export const renderChordName = (sketch: any, chordNames: Array<ChordName>) => {
+export const renderChordName = (sketch: any, chordNames: any[]) => {
   standerdizeRenderSetting(sketch);
   let spacing = findTextStartingX(sketch, chordNames);
   if (!chordNames) {
     return;
   }
-  for (const [index, chordName] of chordNames.entries()) {
+  for (let index = 0; index < chordNames.length; index++) {
+    const chordName = chordNames[index];
     const { key, sharp, flat, aux } = chordName;
     // Main Chord
     sketch.textSize(CONST.TEXT_SIZE.standard);
@@ -132,13 +127,14 @@ export const renderChordName = (sketch: any, chordNames: Array<ChordName>) => {
  */
 export const findTextStartingX = (
   sketch: any,
-  chordNames: Array<ChordName>
+  chordNames: any[]
 ) => {
   let x = 0;
   if (!chordNames) {
     return;
   }
-  for (let [index, chordName] of chordNames.entries()) {
+  for (let index = 0; index < chordNames.length; index++) {
+    const chordName = chordNames[index];
     const { key, aux } = chordName;
     // Main Chord
     sketch.textSize(CONST.TEXT_SIZE.standard);
@@ -164,8 +160,8 @@ export const findTextStartingX = (
  */
 export const renderChordNotes = (
   sketch: any,
-  chordNotes: Array<ChordNote>,
-  settings: Settings
+  chordNotes: any[],
+  settings: any
 ) => {
   const { frets, instrument, startingFret } = settings;
   const { strings } = instrument;
@@ -263,7 +259,8 @@ export const renderChordNotes = (
   if (!openChords) {
     return;
   }
-  for (let [index, openChord] of openChords.entries()) {
+  for (let index = 0; index < openChords.length; index++) {
+    const openChord = openChords[index];
     if (openChord) {
       sketch.fill(CONST.COLOR.white);
       sketch.ellipse(
@@ -290,7 +287,7 @@ export const renderChordNotes = (
  * @param {Sketch} sketch - P5JS Sketch
  * @param {Object} settings - the setting
  */
-export const renderStartingFretText = (sketch: any, settings: Settings) => {
+export const renderStartingFretText = (sketch: any, settings: any) => {
   const { startingFret } = settings;
   if (startingFret === 1) {
     return;
@@ -326,7 +323,7 @@ export const renderStartingFretText = (sketch: any, settings: Settings) => {
  * @param {number} strings - Number of rendered Strings
  */
 export const isVisibleOnNeck = (
-  chordNote: ChordNote,
+  chordNote: any,
   startingFret: number,
   frets: number,
   strings: number

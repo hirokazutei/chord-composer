@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Dispatch } from "redux";
-import { INDEX_KEYS } from "../../../../constants/keys";
+import { Dispatch, AnyAction } from "redux";
+import { INDEX_CHORD } from "../../../../constants/keys";
 import actionTypes from "../../../../redux/actionTypes";
 import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
@@ -15,13 +15,13 @@ const styles = {
     ...DEFAULT_STYLE.button,
     fontSize: 14,
     minHeight: 40,
-    minWidth: 72,
+    minWidth: 90,
   },
   buttonSelected: {
     ...DEFAULT_STYLE.button,
     fontSize: 14,
     minHeight: 40,
-    minWidth: 72,
+    minWidth: 90,
     backgroundColor: PALETTE.accent,
     borderColor: PALETTE.accent,
     color: PALETTE.white,
@@ -29,7 +29,8 @@ const styles = {
   },
   row: {
     display: "flex",
-    flexDirection: "row",
+    flex: 1,
+    flexDirection: "row" as const,
     gap: 4,
     marginBottom: 4,
   },
@@ -41,46 +42,46 @@ const styles = {
   },
 };
 
-type StateProps = { currentKey: string };
-type Props = Dispatch & StateProps;
+type StateProps = { currentChord: string };
+type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
-class KeyChanger extends Component<Props> {
-  changeKey = (key: string) => {
-    this.props.dispatch({ type: actionTypes.CHANGE_KEY, key });
+class KeyModifier extends Component<Props> {
+  changeChord = (chord: string) => {
+    this.props.dispatch({ type: actionTypes.CHANGE_CHORD, chord });
   };
 
   render() {
     return (
       <div style={styles.view}>
         <div style={styles.border}>
-          <h3 style={styles.title}>Key</h3>
+          <h3 style={styles.title}>Chord</h3>
           <div style={styles.row}>
-            {INDEX_KEYS.slice(0, 6).map(key => (
+            {INDEX_CHORD.slice(0, 4).map(chord => (
               <button
-                onClick={() => this.changeKey(key.key)}
-                key={key.key}
+                onClick={() => this.changeChord(chord.chord)}
+                key={chord.chord}
                 style={
-                  this.props.currentKey === key.key
+                  this.props.currentChord === chord.chord
                     ? styles.buttonSelected
                     : styles.button
                 }
               >
-                {key.display}
+                {chord.display}
               </button>
             ))}
           </div>
           <div style={styles.row}>
-            {INDEX_KEYS.slice(6, 12).map(key => (
+            {INDEX_CHORD.slice(4, 8).map(chord => (
               <button
-                onClick={() => this.changeKey(key.key)}
-                key={key.key}
+                onClick={() => this.changeChord(chord.chord)}
+                key={chord.chord}
                 style={
-                  this.props.currentKey === key.key
+                  this.props.currentChord === chord.chord
                     ? styles.buttonSelected
                     : styles.button
                 }
               >
-                {key.display}
+                {chord.display}
               </button>
             ))}
           </div>
@@ -91,8 +92,8 @@ class KeyChanger extends Component<Props> {
 }
 
 const mapStateToProps = (state: State): StateProps => {
-  const { currentKey } = state;
-  return { currentKey };
+  const { currentChord } = state;
+  return { currentChord };
 };
 
-export default connect(mapStateToProps)(KeyChanger);
+export default connect(mapStateToProps)(KeyModifier);

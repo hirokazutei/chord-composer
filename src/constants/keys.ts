@@ -1,5 +1,3 @@
-/* @flow */
-
 export const INDEX_KEYS = [
   { key: "a", display: "A" },
   { key: "ab", display: "A♯/B♭" },
@@ -33,7 +31,7 @@ export const INDEX_MODES = [
 ];
 
 // Note - Chord - Text, chordNames, ChordNotes - Guitar, Uku
-const KEYS = {
+const KEYS: Record<string, any> = {
   // A
   a: {
     maj: {

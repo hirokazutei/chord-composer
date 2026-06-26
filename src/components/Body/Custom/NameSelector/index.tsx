@@ -1,7 +1,6 @@
-/* @flow */
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import type { Dispatch } from "redux";
+import { Dispatch, AnyAction } from "redux";
 import actionTypes from "../../../../redux/actionTypes";
 import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
@@ -42,7 +41,7 @@ const styles = {
     alignItems: "center",
     display: "flex",
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row" as const
   },
   slash: {
     color: PALETTE.teal,
@@ -71,10 +70,10 @@ const styles = {
 };
 
 type StateProps = {
-  customChordNames: Array<ChordName>,
-  customExtraName: ExtraName
+  customChordNames: Array<ChordName>;
+  customExtraName: ExtraName;
 };
-type Props = Dispatch & StateProps;
+type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
 /**
  * Name Selectors

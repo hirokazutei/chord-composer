@@ -5,40 +5,39 @@ import Adjusters from "./Adjusters";
 import Custom from "./Custom";
 import type { State } from "../../constants/types";
 
-// Target dimensions of the design surface (px at scale 1)
 const DESIGN_WIDTH = 980;
 const DESIGN_HEIGHT = 730;
 
 const styles = {
   outer: {
     flex: 1,
-    overflow: "hidden",
+    overflow: "hidden" as const,
     display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "center",
+    alignItems: "flex-start" as const,
+    justifyContent: "center" as const,
   },
   inner: {
     width: DESIGN_WIDTH,
     height: DESIGN_HEIGHT,
     flexShrink: 0,
     display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "flex-start",
+    flexDirection: "row" as const,
+    justifyContent: "center" as const,
+    alignItems: "flex-start" as const,
     padding: 32,
     gap: 24,
     transformOrigin: "top center",
   },
   rightSide: {
     display: "flex",
-    flexDirection: "column",
+    flexDirection: "column" as const,
   },
 };
 
 type Props = { custom: boolean };
 
 const Body = ({ custom }: Props) => {
-  const outerRef = useRef(null);
+  const outerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
