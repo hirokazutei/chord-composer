@@ -437,7 +437,8 @@ function e6Shape(R: number): ChordNote[] {
   }
   return [
     { string: 0, fret: R, finger: "1", barre: 5 },
-    { string: 1, fret: R + 2, finger: "3" },
+    { string: 1, fret: R + 2, finger: "2" },
+    { string: 2, fret: R + 2, finger: "3" },
     { string: 3, fret: R + 1, finger: "2" },
     { string: 4, fret: R + 2, finger: "4" },
   ];
@@ -537,6 +538,7 @@ function eShapeAdd9(R: number): ChordNote[] {
   return [
     { string: 0, fret: R, finger: "1", barre: 5 },
     { string: 1, fret: R + 2, finger: "3" },
+    { string: 2, fret: R + 2 },
     { string: 3, fret: R + 1, finger: "2" },
     { string: 5, fret: R + 2, finger: "4" },
   ];
@@ -605,19 +607,20 @@ function em9Shape(R: number): ChordNote[] {
 
 // Am9 shell: root/5th/b3/9th on str1-2-4-5 (no barre)
 function am9Shape(R: number): ChordNote[] {
+  const ninth = (R + 7) % 12;
   if (R === 0) {
     return [
       { string: 1, fret: 0 },
       { string: 2, fret: 2, finger: "2" },
       { string: 4, fret: 1, finger: "1" },
-      { string: 5, fret: 7, finger: "4" },
+      { string: 5, fret: ninth, finger: "4" },
     ];
   }
   return [
     { string: 1, fret: R, finger: "1" },
     { string: 2, fret: R + 2, finger: "3" },
     { string: 4, fret: R + 1, finger: "2" },
-    { string: 5, fret: R + 7, finger: "4" },
+    { string: 5, fret: ninth, finger: "4" },
   ];
 }
 
@@ -645,13 +648,14 @@ function emaj9Shape(R: number): ChordNote[] {
 
 // Amaj9 shell: root/5th/maj7/3rd on str1-2-3-4, 9th on str5 at R+7
 function amaj9Shape(R: number): ChordNote[] {
+  const ninth = (R + 7) % 12;
   if (R === 0) {
     return [
       { string: 1, fret: 0 },
       { string: 2, fret: 2, finger: "3" },
       { string: 3, fret: 1, finger: "1" },
       { string: 4, fret: 2, finger: "2" },
-      { string: 5, fret: 7, finger: "4" },
+      { string: 5, fret: ninth, finger: "4" },
     ];
   }
   return [
@@ -659,7 +663,7 @@ function amaj9Shape(R: number): ChordNote[] {
     { string: 2, fret: R + 2, finger: "3" },
     { string: 3, fret: R + 1, finger: "2" },
     { string: 4, fret: R + 2, finger: "4" },
-    { string: 5, fret: R + 7, finger: "4" },
+    { string: 5, fret: ninth, finger: "4" },
   ];
 }
 
