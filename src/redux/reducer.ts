@@ -5,8 +5,8 @@ import { getVoicings } from "../constants/voicings";
 import type { State } from "../constants/types";
 
 export const initialState = {
-  chordNotes: [],
-  chordNames: [],
+  chordNotes: (keys as any)["a"]["maj"].chordNotes[INSTRUMENTS.guitar.text] ?? [],
+  chordNames: (keys as any)["a"]["maj"].chordNames,
   custom: false,
   settings: {
     frets: 4,
