@@ -6,234 +6,204 @@ import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
 import type { ChordNote, State } from "../../../../constants/types";
 
+const COL_WIDTHS = [52, 52, 52, 52];
+
 const styles = {
-  addButton: {
-    flex: 1,
-    height: 30,
-    ...DEFAULT_STYLE.button,
-  },
   border: {
     ...DEFAULT_STYLE.border,
+    padding: "12px 10px",
   },
-  noteInput: {
-    color: PALETTE.tealDark,
-    fontSize: 20,
-    margin: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    width: 65,
-  },
-  deleteButton: {
-    height: 25,
-    backgroundColor: PALETTE.teal,
-    borderRadius: 3,
-    border: "none",
-    color: PALETTE.white,
-    fontWeight: "bold",
-    margin: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    width: 65,
-  },
-  column: {
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    display: "flex",
-    flex: 1,
-    flesDirection: "column",
-  },
-  row: {
-    alignItems: "center",
-    flex: 1,
-    flexDirection: "row" as const,
-    justifyContent: "space-evenly",
-  },
-  textSpace: {
-    display: "flex",
-    fontWeight: 20,
-    margin: 5,
-    marginLeft: 15,
-    marginRight: 15,
-    justifyContent: "center",
-    width: 65,
-  },
-  text: {
-    alignSelf: "center",
-    color: PALETTE.teal,
-    fontWeight: "normal",
-    fontSize: 15,
-    transform: "scaleY(1.2)",
-  },
-
   title: {
     ...DEFAULT_STYLE.title,
   },
   view: {
-    margin: "10px 5px 10px 5px",
+    margin: "8px 0",
+  },
+  // Header row
+  headerRow: {
+    display: "flex",
+    flexDirection: "row" as const,
+    alignItems: "center",
+    marginBottom: 6,
+    paddingLeft: 32, // offset for the order buttons column
+  },
+  headerCell: {
+    color: PALETTE.textMuted,
+    fontSize: 10,
+    fontWeight: "700" as const,
+    letterSpacing: "0.12em",
+    textTransform: "uppercase" as const,
+    textAlign: "center" as const,
+    margin: 0,
+  },
+  // Note rows
+  noteRow: {
+    display: "flex",
+    flexDirection: "row" as const,
+    alignItems: "center",
+    marginBottom: 5,
+    gap: 4,
+  },
+  orderButtons: {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: 2,
+    width: 24,
+    flexShrink: 0,
+  },
+  orderBtn: {
+    ...DEFAULT_STYLE.button,
+    flex: "none",
+    width: 24,
+    height: 18,
+    fontSize: 8,
+    padding: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 4,
+    minWidth: "unset",
+  },
+  input: {
+    backgroundColor: "rgba(255,255,255,0.06)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 6,
+    color: PALETTE.textPrimary,
+    fontSize: 14,
+    fontWeight: "500" as const,
+    textAlign: "center" as const,
+    padding: "4px 0",
+    outline: "none",
+    transition: "border-color 0.15s",
+  },
+  fingerInput: {
+    backgroundColor: "rgba(99,102,241,0.12)",
+    border: "1px solid rgba(99,102,241,0.3)",
+    borderRadius: 6,
+    color: PALETTE.accent,
+    fontSize: 14,
+    fontWeight: "600" as const,
+    textAlign: "center" as const,
+    padding: "4px 0",
+    outline: "none",
+    transition: "border-color 0.15s, background-color 0.15s",
+    cursor: "text",
+  },
+  deleteBtn: {
+    ...DEFAULT_STYLE.button,
+    flex: "none",
+    width: 24,
+    height: 38,
+    fontSize: 11,
+    padding: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 6,
+    color: "#f87171",
+    borderColor: "rgba(248,113,113,0.2)",
+    backgroundColor: "rgba(248,113,113,0.08)",
+    minWidth: "unset",
+  },
+  addRow: {
+    display: "flex",
+    marginTop: 8,
+  },
+  addBtn: {
+    ...DEFAULT_STYLE.button,
+    flex: 1,
+    height: 32,
+    fontSize: 12,
+    letterSpacing: "0.06em",
   },
 };
 
-type StateProps = {
-  customChordNotes: Array<ChordNote>;
-};
+type StateProps = { customChordNotes: Array<ChordNote> };
 type Props = { dispatch: Dispatch<AnyAction> } & StateProps;
 
-/**
- * Note Selectors
- * @prop {Props} props - Properties
- * */
 class NoteSelectors extends Component<Props> {
-  /**
-   * On Change Note Fret
-   * @param {number} index - Index of Note Changed
-   * @param {Event} event - Typing Event
-   */
-  onChangeNoteFret = (index: number, event: any) => {
-    this.props.dispatch({
-      index,
-      type: actionTypes.CHANGE_NOTE_FRET,
-      value: event.target.value,
-    });
+  dispatch = (type: string, index: number, extra?: object) => {
+    this.props.dispatch({ type, index, ...extra });
   };
 
-  /**
-   * On Change Note String
-   * @param {number} index - Index of String Changed
-   * @param {Event} event - Typing Event
-   */
-  onChangeNoteString = (index: number, event: any) => {
-    this.props.dispatch({
-      index,
-      type: actionTypes.CHANGE_NOTE_STRING,
-      value: event.target.value,
-    });
-  };
-
-  /**
-   * On Change Note Finger
-   * @param {number} index - Index of Finger Changed
-   * @param {Event} event - Typing Event
-   */
-  onChangeNoteFinger = (index: number, event: any) => {
-    this.props.dispatch({
-      index,
-      type: actionTypes.CHANGE_NOTE_FINGER,
-      value: event.target.value,
-    });
-  };
-
-  /**
-   * On Change Note Barre
-   * @param {number} index - Index of Barre Changed
-   * @param {Event} event - Typing Event
-   */
-  onChangeNoteBarre = (index: number, event: any) => {
-    this.props.dispatch({
-      index,
-      type: actionTypes.CHANGE_NOTE_BARRE,
-      value: event.target.value,
-    });
-  };
-
-  /**
-   * On Delete Note
-   * @param {number} index - Index of Note Deleted
-   */
-  onDeleteNote = (index: number) => {
-    this.props.dispatch({
-      index,
-      type: actionTypes.DELETE_NOTE,
-    });
-  };
-
-  /**
-   * On Add Note
-   */
-  onAddNote = () => {
-    this.props.dispatch({
-      type: actionTypes.ADD_NOTE,
-    });
-  };
-
-  /**
-   * Render
-   */
   render() {
+    const { customChordNotes } = this.props;
+    const colW = COL_WIDTHS;
+
     return (
       <div style={styles.view}>
         <div style={styles.border}>
-          <h3 style={styles.title}>{"NOTES"}</h3>
-          <div style={styles.row}>
-            <div style={styles.column}>
-              <div style={styles.textSpace}>
-                <h4 style={styles.text}>STRING</h4>
-              </div>
-              <div style={styles.textSpace}>
-                <h4 style={styles.text}>FRET</h4>
+          <h3 style={styles.title}>Notes</h3>
+
+          <div style={styles.headerRow}>
+            <span style={{ ...styles.headerCell, width: colW[0] }}>String</span>
+            <span style={{ ...styles.headerCell, width: colW[1] }}>Fret</span>
+            <span style={{ ...styles.headerCell, width: colW[2] }}>Finger</span>
+            <span style={{ ...styles.headerCell, width: colW[3] }}>Barre</span>
+          </div>
+
+          {customChordNotes.map((note, i) => (
+            <div style={styles.noteRow} key={i}>
+              <div style={styles.orderButtons}>
+                <button
+                  style={styles.orderBtn}
+                  onClick={() => this.dispatch(actionTypes.MOVE_NOTE, i, { direction: -1 })}
+                  title="Move up"
+                >▲</button>
+                <button
+                  style={styles.orderBtn}
+                  onClick={() => this.dispatch(actionTypes.MOVE_NOTE, i, { direction: 1 })}
+                  title="Move down"
+                >▼</button>
               </div>
 
-              <div style={styles.textSpace}>
-                <h4 style={styles.text}>FINGER</h4>
-              </div>
+              <input
+                style={{ ...styles.input, width: colW[0] }}
+                type="number"
+                min={0}
+                onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_STRING, i, { value: e.target.value })}
+                value={note.string}
+              />
+              <input
+                style={{ ...styles.input, width: colW[1] }}
+                type="number"
+                min={0}
+                onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_FRET, i, { value: e.target.value })}
+                value={note.fret ?? ""}
+              />
+              <input
+                style={{ ...styles.fingerInput, width: colW[2] }}
+                type="text"
+                maxLength={2}
+                placeholder="–"
+                onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_FINGER, i, { value: e.target.value })}
+                value={note.finger ?? ""}
+                title="Click to set finger number"
+              />
+              <input
+                style={{ ...styles.input, width: colW[3] }}
+                type="number"
+                min={0}
+                placeholder="–"
+                onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_BARRE, i, { value: e.target.value })}
+                value={note.barre ?? ""}
+              />
 
-              <div style={styles.textSpace}>
-                <h4 style={styles.text}>BARRE</h4>
-              </div>
-
-              <div style={styles.textSpace}>
-                <h4 style={styles.text}>DELETE</h4>
-              </div>
+              <button
+                style={styles.deleteBtn}
+                onClick={() => this.dispatch(actionTypes.DELETE_NOTE, i)}
+                title="Delete note"
+              >✕</button>
             </div>
+          ))}
 
-            {this.props.customChordNotes.map((chordNote, index) => {
-              return (
-                <div style={styles.column} key={index}>
-                  <input
-                    style={styles.noteInput}
-                    type="text"
-                    onChange={this.onChangeNoteString.bind(this, index)}
-                    value={this.props.customChordNotes[index].string}
-                  />
-                  <input
-                    style={styles.noteInput}
-                    type="text"
-                    onChange={this.onChangeNoteFret.bind(this, index)}
-                    value={this.props.customChordNotes[index].fret ?? ""}
-                  />
-                  <input
-                    style={styles.noteInput}
-                    type="text"
-                    onChange={this.onChangeNoteFinger.bind(this, index)}
-                    value={
-                      this.props.customChordNotes[index].finger
-                        ? this.props.customChordNotes[index].finger
-                        : ""
-                    }
-                  />
-                  <input
-                    style={styles.noteInput}
-                    type="text"
-                    onChange={this.onChangeNoteBarre.bind(this, index)}
-                    value={
-                      this.props.customChordNotes[index].barre
-                        ? this.props.customChordNotes[index].barre
-                        : ""
-                    }
-                  />
-                  <button
-                    style={styles.deleteButton}
-                    onClick={this.onDeleteNote.bind(this, index)}
-                  >
-                    X
-                  </button>
-                </div>
-              );
-            })}
-            <div style={styles.column}>
-              <button style={styles.addButton} onClick={this.onAddNote}>
-                + ADD ANOTHER NOTE
-              </button>
-            </div>
+          <div style={styles.addRow}>
+            <button
+              style={styles.addBtn}
+              onClick={() => this.props.dispatch({ type: actionTypes.ADD_NOTE })}
+            >
+              + Add Note
+            </button>
           </div>
         </div>
       </div>
@@ -241,9 +211,8 @@ class NoteSelectors extends Component<Props> {
   }
 }
 
-const mapStateToProps = (state: State): StateProps => {
-  const { customChordNotes } = state;
-  return { customChordNotes };
-};
+const mapStateToProps = (state: State): StateProps => ({
+  customChordNotes: state.customChordNotes,
+});
 
 export default connect(mapStateToProps)(NoteSelectors);

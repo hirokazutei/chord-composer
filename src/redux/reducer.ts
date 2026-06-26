@@ -271,6 +271,17 @@ export const reducer = (state: State = initialState, action: any): State => {
       newCustomChordNotes.splice(action.index, 1);
       break;
     }
+    // MOVE_NOTE
+    case actionTypes.MOVE_NOTE: {
+      const { index, direction } = action;
+      const target = index + direction;
+      if (target >= 0 && target < newCustomChordNotes.length) {
+        const tmp = newCustomChordNotes[index];
+        newCustomChordNotes[index] = newCustomChordNotes[target];
+        newCustomChordNotes[target] = tmp;
+      }
+      break;
+    }
     default:
       break;
   }

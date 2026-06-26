@@ -16,6 +16,7 @@ const actionTypes = {
   CHANGE_NOTE_BARRE: "CHANGE_NOTE_BARRE",
   ADD_NOTE: "ADD_NOTE",
   DELETE_NOTE: "DELETE_NOTE",
+  MOVE_NOTE: "MOVE_NOTE",
 } as const;
 
 export default actionTypes;
