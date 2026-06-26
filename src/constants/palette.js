@@ -1,12 +1,18 @@
-/* @flow */
 export const PALETTE = {
-  background: "#75d5f9",
+  background: "#080b14",
   black: "#000000",
   white: "#ffffff",
-  header: "#006e99",
-  orange: "#FF8000",
-  title: "#06343d",
-  teal: "#00b8ff",
-  tealLight: "#f7fcff",
-  tealDark: "#006e99"
+  header: "rgba(8, 11, 20, 0.92)",
+  accent: "#6366f1",
+  accentDark: "#4f46e5",
+  accentGlow: "rgba(99, 102, 241, 0.35)",
+  surface: "rgba(255, 255, 255, 0.05)",
+  surfaceBorder: "rgba(255, 255, 255, 0.1)",
+  textPrimary: "#f1f5f9",
+  textMuted: "#94a3b8",
+  title: "#94a3b8",
+  teal: "rgba(255, 255, 255, 0.08)",
+  tealLight: "rgba(255, 255, 255, 0.04)",
+  tealDark: "#6366f1",
+  orange: "#f59e0b",
 };

@@ -1,48 +1,46 @@
-/* @flow */
 import React from "react";
 import { PALETTE } from "../../constants/palette";
-import DEFAULT_STYLE from "../../constants/styles";
-import logo from "../../static/icons/ChordGenFaviconw.png";
-import SocialMedia from "./SocialMedia";
 
 const styles = {
   header: {
-    alignContent: "flex-end",
     backgroundColor: PALETTE.header,
-    boxShadow: "0px 0px 20px #196472",
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    borderBottom: "1px solid rgba(255,255,255,0.07)",
     display: "flex",
-    flex: 1,
-    flexDirection: "row",
-    maxHeight: 75,
-    paddingTop: 15,
-    paddingLeft: 30,
-    paddingRight: 50,
-    paddingBottom: 10,
+    alignItems: "center",
+    paddingTop: 18,
+    paddingBottom: 18,
+    paddingLeft: 36,
+    paddingRight: 36,
   },
   title: {
-    ...DEFAULT_STYLE.title,
-    alignSelf: "center",
-    color: PALETTE.white,
-    fontSize: 35,
+    color: PALETTE.textPrimary,
+    fontSize: 22,
+    fontWeight: "700",
+    letterSpacing: "0.08em",
+    textTransform: "uppercase",
   },
-  webIcon: {
-    alignSelf: "center",
-    height: 50,
-    marginRight: 10,
+  dot: {
+    display: "inline-block",
+    width: 8,
+    height: 8,
+    borderRadius: "50%",
+    backgroundColor: PALETTE.accent,
+    marginLeft: 8,
+    marginBottom: 2,
+    verticalAlign: "middle",
+    boxShadow: `0 0 8px ${PALETTE.accentGlow}`,
   },
 };
 
-/**
- * Header
- */
-const Header = () => {
-  return (
-    <div style={styles.header}>
-      <img src={logo} style={styles.webIcon} alt="github" />
-      <h1 style={styles.title}>CHORD COMPOSER</h1>
-      <SocialMedia />
-    </div>
-  );
-};
+const Header = () => (
+  <div style={styles.header}>
+    <h1 style={styles.title}>
+      Chord Composer
+      <span style={styles.dot} />
+    </h1>
+  </div>
+);
 
 export default Header;

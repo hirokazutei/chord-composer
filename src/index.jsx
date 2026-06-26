@@ -1,6 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import registerServiceWorker from "./registerServiceWorker";
+import { createRoot } from "react-dom/client";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { reducer } from "./redux/reducer";
@@ -8,14 +7,11 @@ import App from "./App";
 
 const store = createStore(reducer);
 
-/**
- * TheApp
- */
 const TheApp = () => (
   <Provider store={store}>
     <App />
   </Provider>
 );
 
-ReactDOM.render(<TheApp />, document.getElementById("root"));
-registerServiceWorker();
+const root = createRoot(document.getElementById("root"));
+root.render(<TheApp />);
