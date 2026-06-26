@@ -457,6 +457,212 @@ function a6Shape(R: number): ChordNote[] {
   ];
 }
 
+// ─── Augmented ───────────────────────────────────────────────────────────────
+// E-aug open: 0-3-2-1-1-0  (descending staircase: +3/+2/+1/+1 offsets from barre)
+
+function eShapeAug(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 0, fret: 0 },
+      { string: 1, fret: 3, finger: "4" },
+      { string: 2, fret: 2, finger: "3" },
+      { string: 3, fret: 1, finger: "1" },
+      { string: 4, fret: 1, finger: "2" },
+      { string: 5, fret: 0 },
+    ];
+  }
+  return [
+    { string: 0, fret: R, finger: "1", barre: 5 },
+    { string: 1, fret: R + 3, finger: "4" },
+    { string: 2, fret: R + 2, finger: "3" },
+    { string: 3, fret: R + 1, finger: "2", barre: 1 },
+  ];
+}
+
+// A-aug open: x-0-3-2-2-1
+function aShapeAug(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 1, fret: 0 },
+      { string: 2, fret: 3, finger: "4" },
+      { string: 3, fret: 2, finger: "3" },
+      { string: 4, fret: 2, finger: "2" },
+      { string: 5, fret: 1, finger: "1" },
+    ];
+  }
+  return [
+    { string: 1, fret: R, finger: "1" },
+    { string: 2, fret: R + 3, finger: "4" },
+    { string: 3, fret: R + 2, finger: "3", barre: 1 },
+    { string: 5, fret: R + 1, finger: "2" },
+  ];
+}
+
+// ─── Add9 ─────────────────────────────────────────────────────────────────────
+// Aadd9 open: x-0-2-4-2-0  (9th at G+4 on str3)
+
+function aShapeAdd9Low(R: number): ChordNote[] {
+  // For low A_ROOT (0-2): 9th sits on str3 at R+4
+  return [
+    { string: 1, fret: R, finger: "1" },
+    { string: 2, fret: R + 2, finger: "2" },
+    { string: 3, fret: R + 4, finger: "4" },
+    { string: 4, fret: R + 2, finger: "3" },
+    { string: 5, fret: R },
+  ];
+}
+
+// Cadd9 shape: x-3-2-0-3-0 — str4 carries the 9th; works when aR >= 3
+function cShapeAdd9(R: number): ChordNote[] {
+  const s3 = Math.max(0, R - 3);
+  return [
+    { string: 1, fret: R, finger: "3" },
+    { string: 2, fret: R - 1, finger: "2" },
+    { string: 3, fret: s3 },
+    { string: 4, fret: R, finger: "4" },
+    { string: 5, fret: s3 },
+  ];
+}
+
+// Eadd9 shape: barre + 9th on str5 (eR+2)
+function eShapeAdd9(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 0, fret: 0 },
+      { string: 1, fret: 2, finger: "3" },
+      { string: 3, fret: 1, finger: "2" },
+      { string: 5, fret: 2, finger: "4" },
+    ];
+  }
+  return [
+    { string: 0, fret: R, finger: "1", barre: 5 },
+    { string: 1, fret: R + 2, finger: "3" },
+    { string: 3, fret: R + 1, finger: "2" },
+    { string: 5, fret: R + 2, finger: "4" },
+  ];
+}
+
+// ─── 7sus4 ────────────────────────────────────────────────────────────────────
+// A7sus4 open: x-0-2-0-3-0  (str4=4th at R+3; str3,5 at R via barre = b7 and 5th)
+
+function a7sus4Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 1, fret: 0 },
+      { string: 2, fret: 2, finger: "2" },
+      { string: 3, fret: 0 },
+      { string: 4, fret: 3, finger: "3" },
+      { string: 5, fret: 0 },
+    ];
+  }
+  return [
+    { string: 1, fret: R, finger: "1", barre: 5 },
+    { string: 2, fret: R + 2, finger: "3" },
+    { string: 4, fret: R + 3, finger: "4" },
+  ];
+}
+
+// E7sus4 open: 0-2-0-2-3-0  (str3=4th at R+2; str4=b7 at R+3)
+function e7sus4Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 0, fret: 0 },
+      { string: 1, fret: 2, finger: "2" },
+      { string: 2, fret: 0 },
+      { string: 3, fret: 2, finger: "3" },
+      { string: 4, fret: 3, finger: "4" },
+      { string: 5, fret: 0 },
+    ];
+  }
+  return [
+    { string: 0, fret: R, finger: "1", barre: 5 },
+    { string: 1, fret: R + 2, finger: "2" },
+    { string: 3, fret: R + 2, finger: "3" },
+    { string: 4, fret: R + 3, finger: "4" },
+  ];
+}
+
+// ─── Minor 9th ────────────────────────────────────────────────────────────────
+// Em9 barre shape: barre at R + 9th on str5 (R+2); str4 via barre = b3
+
+function em9Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 0, fret: 0 },
+      { string: 1, fret: 2, finger: "2" },
+      { string: 2, fret: 0 },
+      { string: 3, fret: 0 },
+      { string: 4, fret: 0 },
+      { string: 5, fret: 2, finger: "3" },
+    ];
+  }
+  return [
+    { string: 0, fret: R, finger: "1", barre: 5 },
+    { string: 1, fret: R + 2, finger: "3" },
+    { string: 5, fret: R + 2, finger: "4" },
+  ];
+}
+
+// Am9 shell: root/5th/b3/9th on str1-2-4-5 (no barre)
+function am9Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 1, fret: 0 },
+      { string: 2, fret: 2, finger: "2" },
+      { string: 4, fret: 1, finger: "1" },
+      { string: 5, fret: 7, finger: "4" },
+    ];
+  }
+  return [
+    { string: 1, fret: R, finger: "1" },
+    { string: 2, fret: R + 2, finger: "3" },
+    { string: 4, fret: R + 1, finger: "2" },
+    { string: 5, fret: R + 7, finger: "4" },
+  ];
+}
+
+// ─── Major 9th ────────────────────────────────────────────────────────────────
+// Emaj9: Emaj7 barre shape with 9th added on str5 (R+2)
+
+function emaj9Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 0, fret: 0 },
+      { string: 1, fret: 2, finger: "4" },
+      { string: 2, fret: 1, finger: "2" },
+      { string: 3, fret: 1, finger: "3" },
+      { string: 4, fret: 0 },
+      { string: 5, fret: 2, finger: "4" },
+    ];
+  }
+  return [
+    { string: 0, fret: R, finger: "1", barre: 5 },
+    { string: 1, fret: R + 2, finger: "4" },
+    { string: 2, fret: R + 1, finger: "2", barre: 1 },
+    { string: 5, fret: R + 2, finger: "4" },
+  ];
+}
+
+// Amaj9 shell: root/5th/maj7/3rd on str1-2-3-4, 9th on str5 at R+7
+function amaj9Shape(R: number): ChordNote[] {
+  if (R === 0) {
+    return [
+      { string: 1, fret: 0 },
+      { string: 2, fret: 2, finger: "3" },
+      { string: 3, fret: 1, finger: "1" },
+      { string: 4, fret: 2, finger: "2" },
+      { string: 5, fret: 7, finger: "4" },
+    ];
+  }
+  return [
+    { string: 1, fret: R, finger: "1" },
+    { string: 2, fret: R + 2, finger: "3" },
+    { string: 3, fret: R + 1, finger: "2" },
+    { string: 4, fret: R + 2, finger: "4" },
+    { string: 5, fret: R + 7, finger: "4" },
+  ];
+}
+
 // ─── Public API ──────────────────────────────────────────────────────────────
 
 /** Returns computed guitar voicings for the given key and chord type, or null if none defined. */
@@ -515,6 +721,36 @@ export function getVoicings(key: string, chord: string): Voicing[] | null {
       return [
         { label: "E6", notes: e6Shape(eR) },
         { label: "A6", notes: a6Shape(aR) },
+      ];
+    case "aug":
+      return [
+        { label: "E+", notes: eShapeAug(eR) },
+        { label: "A+", notes: aShapeAug(aR) },
+      ];
+    case "add9":
+      return aR <= 2
+        ? [
+            { label: "A", notes: aShapeAdd9Low(aR) },
+            { label: "E", notes: eShapeAdd9(eR) },
+          ]
+        : [
+            { label: "C", notes: cShapeAdd9(aR) },
+            { label: "E", notes: eShapeAdd9(eR) },
+          ];
+    case "sus4b":
+      return [
+        { label: "E7", notes: e7sus4Shape(eR) },
+        { label: "A7", notes: a7sus4Shape(aR) },
+      ];
+    case "m9":
+      return [
+        { label: "Em9", notes: em9Shape(eR) },
+        { label: "Am9", notes: am9Shape(aR) },
+      ];
+    case "maj9":
+      return [
+        { label: "E△9", notes: emaj9Shape(eR) },
+        { label: "A△9", notes: amaj9Shape(aR) },
       ];
     default:
       return null;

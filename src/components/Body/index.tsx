@@ -6,7 +6,7 @@ import Custom from "./Custom";
 import type { State } from "../../constants/types";
 
 const DESIGN_WIDTH = 1110;
-const DESIGN_HEIGHT = 730;
+const DESIGN_HEIGHT = 780;
 
 const styles = {
   outer: {
