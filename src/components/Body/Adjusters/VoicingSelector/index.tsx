@@ -30,7 +30,7 @@ const styles = {
     alignItems: "center" as const,
     justifyContent: "center" as const,
     fontSize: 13,
-    color: PALETTE.text,
+    color: PALETTE.textPrimary,
     minWidth: 36,
     userSelect: "none" as const,
   },
