@@ -1,6 +1,7 @@
 import actionTypes from "./actionTypes";
 import keys from "../constants/keys";
 import { INSTRUMENTS } from "../constants/index";
+import { getVoicings } from "../constants/voicings";
 import type { State } from "../constants/types";
 
 export const initialState = {
@@ -14,6 +15,7 @@ export const initialState = {
   },
   currentKey: "a",
   currentChord: "maj",
+  currentVoicingIndex: -1,
   customExtraName: false,
   customChordNotes: [
     { string: 1, fret: 1, finger: "1", barre: 5 },
@@ -52,12 +54,12 @@ export const reducer = (state: State = initialState, action: any): State => {
   switch (action.type) {
     case actionTypes.CHANGE_KEY:
       newState.chordNames = keys[action.key][state.currentChord].chordNames;
-
       newState.chordNotes =
         keys[action.key][state.currentChord].chordNotes[
           state.settings.instrument.text
         ];
       newState.currentKey = action.key;
+      newState.currentVoicingIndex = -1;
       break;
     case actionTypes.CHANGE_CHORD:
       newState.chordNames = keys[state.currentKey][action.chord].chordNames;
@@ -66,7 +68,24 @@ export const reducer = (state: State = initialState, action: any): State => {
           state.settings.instrument.text
         ];
       newState.currentChord = action.chord;
+      newState.currentVoicingIndex = -1;
       break;
+    case actionTypes.CHANGE_VOICING: {
+      const idx: number = action.index;
+      newState.currentVoicingIndex = idx;
+      if (idx === -1) {
+        newState.chordNotes =
+          keys[state.currentKey][state.currentChord].chordNotes[
+            state.settings.instrument.text
+          ];
+      } else {
+        const voicings = getVoicings(state.currentKey, state.currentChord);
+        if (voicings && idx < voicings.length) {
+          newState.chordNotes = voicings[idx].notes;
+        }
+      }
+      break;
+    }
     case actionTypes.CHANGE_MODE:
       switch (action.mode) {
         case INSTRUMENTS.guitar.text: {
@@ -78,6 +97,7 @@ export const reducer = (state: State = initialState, action: any): State => {
               INSTRUMENTS.guitar.text
             ];
           newState.custom = false;
+          newState.currentVoicingIndex = -1;
           break;
         }
         case INSTRUMENTS.ukulele.text: {
@@ -89,6 +109,7 @@ export const reducer = (state: State = initialState, action: any): State => {
               INSTRUMENTS.ukulele.text
             ];
           newState.custom = false;
+          newState.currentVoicingIndex = -1;
           break;
         }
         default: {
@@ -307,6 +328,7 @@ export const reducer = (state: State = initialState, action: any): State => {
     ...newState,
     chordNames: newState.chordNames,
     chordNotes: newState.chordNotes,
+    currentVoicingIndex: newState.currentVoicingIndex,
     customSettings: newCustomSettings,
     customChordNotes: newCustomChordNotes,
     customChordNames: newCustomChordNames

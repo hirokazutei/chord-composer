@@ -2,6 +2,7 @@ import React from "react";
 import ModeChanger from "../ModeChanger";
 import KeyChanger from "./KeyChanger";
 import KeyModifier from "./KeyModifier";
+import VoicingSelector from "./VoicingSelector";
 
 const styles = {
   adjusters: {
@@ -17,6 +18,7 @@ const Adjusters = () => (
     <ModeChanger />
     <KeyChanger />
     <KeyModifier />
+    <VoicingSelector />
   </div>
 );
 
