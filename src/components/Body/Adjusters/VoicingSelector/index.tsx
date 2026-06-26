@@ -17,23 +17,6 @@ const styles = {
     minHeight: 40,
     flex: 1,
   },
-  buttonDisabled: {
-    ...DEFAULT_STYLE.button,
-    fontSize: 18,
-    minHeight: 40,
-    flex: 1,
-    opacity: 0.25,
-    cursor: "not-allowed" as const,
-  },
-  counter: {
-    display: "flex",
-    alignItems: "center" as const,
-    justifyContent: "center" as const,
-    fontSize: 13,
-    color: PALETTE.textPrimary,
-    minWidth: 36,
-    userSelect: "none" as const,
-  },
   row: {
     display: "flex",
     flex: 1,
@@ -69,8 +52,8 @@ class VoicingSelector extends Component<Props> {
     const voicings = getVoicings(currentKey, currentChord);
     if (!voicings) return null;
 
-    const canUp = currentVoicingIndex > 0;
-    const canDown = currentVoicingIndex < voicings.length - 1;
+    const n = voicings.length;
+    const current = currentVoicingIndex < 0 ? 0 : currentVoicingIndex;
 
     return (
       <div style={styles.view}>
@@ -78,17 +61,14 @@ class VoicingSelector extends Component<Props> {
           <h3 style={styles.title}>Voicing</h3>
           <div style={styles.row}>
             <button
-              style={canUp ? styles.button : styles.buttonDisabled}
-              onClick={() => canUp && this.changeVoicing(currentVoicingIndex - 1)}
+              style={styles.button}
+              onClick={() => this.changeVoicing((current - 1 + n) % n)}
             >
               ↑
             </button>
-            <span style={styles.counter}>
-              {currentVoicingIndex + 1} / {voicings.length}
-            </span>
             <button
-              style={canDown ? styles.button : styles.buttonDisabled}
-              onClick={() => canDown && this.changeVoicing(currentVoicingIndex + 1)}
+              style={styles.button}
+              onClick={() => this.changeVoicing((current + 1) % n)}
             >
               ↓
             </button>
