@@ -15,13 +15,11 @@ const styles = {
     ...DEFAULT_STYLE.button,
     fontSize: 14,
     minHeight: 40,
-    minWidth: 72,
   },
   buttonSelected: {
     ...DEFAULT_STYLE.button,
     fontSize: 14,
     minHeight: 40,
-    minWidth: 72,
     backgroundColor: PALETTE.accent,
     borderColor: PALETTE.accent,
     color: PALETTE.white,

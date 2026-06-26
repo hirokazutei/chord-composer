@@ -5,7 +5,7 @@ import Adjusters from "./Adjusters";
 import Custom from "./Custom";
 import type { State } from "../../constants/types";
 
-const DESIGN_WIDTH = 980;
+const DESIGN_WIDTH = 1110;
 const DESIGN_HEIGHT = 730;
 
 const styles = {
@@ -31,7 +31,7 @@ const styles = {
   rightSide: {
     display: "flex",
     flexDirection: "column" as const,
-    width: 332,
+    width: 460,
     flexShrink: 0,
   },
 };
