@@ -266,6 +266,16 @@ export const reducer = (state: State = initialState, action: any): State => {
       });
       break;
     }
+    // ADD_NOTE_AT
+    case actionTypes.ADD_NOTE_AT: {
+      newCustomChordNotes.push({
+        string: action.string,
+        fret: action.fret,
+        finger: null,
+        barre: null
+      });
+      break;
+    }
     // DELETE_NOTE
     case actionTypes.DELETE_NOTE: {
       newCustomChordNotes.splice(action.index, 1);

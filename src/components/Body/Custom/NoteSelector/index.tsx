@@ -6,7 +6,8 @@ import { PALETTE } from "../../../../constants/palette";
 import DEFAULT_STYLE from "../../../../constants/styles";
 import type { ChordNote, State } from "../../../../constants/types";
 
-const COL_WIDTHS = [52, 52, 52, 52];
+const SIDE_BTN = 26; // width of order/delete buttons
+const GAP = 4;
 
 const styles = {
   border: {
@@ -19,15 +20,19 @@ const styles = {
   view: {
     margin: "8px 0",
   },
-  // Header row
   headerRow: {
     display: "flex",
     flexDirection: "row" as const,
     alignItems: "center",
     marginBottom: 6,
-    paddingLeft: 32, // offset for the order buttons column
+    gap: GAP,
+  },
+  headerSpacer: {
+    width: SIDE_BTN,
+    flexShrink: 0,
   },
   headerCell: {
+    flex: 1,
     color: PALETTE.textMuted,
     fontSize: 10,
     fontWeight: "700" as const,
@@ -36,25 +41,24 @@ const styles = {
     textAlign: "center" as const,
     margin: 0,
   },
-  // Note rows
   noteRow: {
     display: "flex",
     flexDirection: "row" as const,
     alignItems: "center",
     marginBottom: 5,
-    gap: 4,
+    gap: GAP,
   },
   orderButtons: {
     display: "flex",
     flexDirection: "column" as const,
     gap: 2,
-    width: 24,
+    width: SIDE_BTN,
     flexShrink: 0,
   },
   orderBtn: {
     ...DEFAULT_STYLE.button,
     flex: "none",
-    width: 24,
+    width: SIDE_BTN,
     height: 18,
     fontSize: 8,
     padding: 0,
@@ -65,6 +69,8 @@ const styles = {
     minWidth: "unset",
   },
   input: {
+    flex: 1,
+    minWidth: 0,
     backgroundColor: "rgba(255,255,255,0.06)",
     border: "1px solid rgba(255,255,255,0.1)",
     borderRadius: 6,
@@ -74,9 +80,10 @@ const styles = {
     textAlign: "center" as const,
     padding: "4px 0",
     outline: "none",
-    transition: "border-color 0.15s",
   },
   fingerInput: {
+    flex: 1,
+    minWidth: 0,
     backgroundColor: "rgba(99,102,241,0.12)",
     border: "1px solid rgba(99,102,241,0.3)",
     borderRadius: 6,
@@ -86,13 +93,12 @@ const styles = {
     textAlign: "center" as const,
     padding: "4px 0",
     outline: "none",
-    transition: "border-color 0.15s, background-color 0.15s",
     cursor: "text",
   },
   deleteBtn: {
     ...DEFAULT_STYLE.button,
     flex: "none",
-    width: 24,
+    width: SIDE_BTN,
     height: 38,
     fontSize: 11,
     padding: 0,
@@ -128,7 +134,6 @@ class NoteSelectors extends Component<Props> {
 
   render() {
     const { customChordNotes } = this.props;
-    const colW = COL_WIDTHS;
 
     return (
       <div style={styles.view}>
@@ -136,10 +141,12 @@ class NoteSelectors extends Component<Props> {
           <h3 style={styles.title}>Notes</h3>
 
           <div style={styles.headerRow}>
-            <span style={{ ...styles.headerCell, width: colW[0] }}>String</span>
-            <span style={{ ...styles.headerCell, width: colW[1] }}>Fret</span>
-            <span style={{ ...styles.headerCell, width: colW[2] }}>Finger</span>
-            <span style={{ ...styles.headerCell, width: colW[3] }}>Barre</span>
+            <div style={styles.headerSpacer} />
+            <span style={styles.headerCell}>String</span>
+            <span style={styles.headerCell}>Fret</span>
+            <span style={styles.headerCell}>Finger</span>
+            <span style={styles.headerCell}>Barre</span>
+            <div style={styles.headerSpacer} />
           </div>
 
           {customChordNotes.map((note, i) => (
@@ -158,21 +165,21 @@ class NoteSelectors extends Component<Props> {
               </div>
 
               <input
-                style={{ ...styles.input, width: colW[0] }}
+                style={styles.input}
                 type="number"
                 min={0}
                 onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_STRING, i, { value: e.target.value })}
                 value={note.string}
               />
               <input
-                style={{ ...styles.input, width: colW[1] }}
+                style={styles.input}
                 type="number"
                 min={0}
                 onChange={e => this.dispatch(actionTypes.CHANGE_NOTE_FRET, i, { value: e.target.value })}
                 value={note.fret ?? ""}
               />
               <input
-                style={{ ...styles.fingerInput, width: colW[2] }}
+                style={styles.fingerInput}
                 type="text"
                 maxLength={2}
                 placeholder="–"
@@ -181,7 +188,7 @@ class NoteSelectors extends Component<Props> {
                 title="Click to set finger number"
               />
               <input
-                style={{ ...styles.input, width: colW[3] }}
+                style={styles.input}
                 type="number"
                 min={0}
                 placeholder="–"

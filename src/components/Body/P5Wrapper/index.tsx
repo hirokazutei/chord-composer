@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Dispatch, AnyAction } from "redux";
 import sketch from "./sketch";
+import actionTypes from "../../../redux/actionTypes";
 import type { State } from "../../../constants/types";
 import { PALETTE } from "../../../constants/palette";
 
@@ -27,7 +29,7 @@ const styles = {
   },
 };
 
-type Props = State;
+type Props = State & { addNoteAt: (string: number, fret: number) => void };
 
 class P5Wrapper extends Component<Props> {
   canvas: any;
@@ -35,10 +37,12 @@ class P5Wrapper extends Component<Props> {
   componentDidMount() {
     this.canvas = new (window as any).p5(sketch, "canvas-container");
     this.canvas.props = this.props;
+    this.canvas.onNoteClick = this.props.addNoteAt;
   }
 
-  shouldComponentUpdate(state: State): boolean {
-    this.canvas.props = state;
+  shouldComponentUpdate(nextProps: Props): boolean {
+    this.canvas.props = nextProps;
+    this.canvas.onNoteClick = nextProps.addNoteAt;
     return false;
   }
 
@@ -55,4 +59,10 @@ class P5Wrapper extends Component<Props> {
   }
 }
 
-export default connect((state: State): State => state)(P5Wrapper);
+const mapStateToProps = (state: State) => state;
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
+  addNoteAt: (string: number, fret: number) =>
+    dispatch({ type: actionTypes.ADD_NOTE_AT, string, fret }),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(P5Wrapper);

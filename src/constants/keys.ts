@@ -16,6 +16,7 @@ export const INDEX_KEYS = [
 export const INDEX_CHORD = [
   { chord: "maj", display: "Major" },
   { chord: "min", display: "Minor" },
+  { chord: "dim", display: "Dim" },
   { chord: "sev", display: "Dom 7" },
   { chord: "m7", display: "Min 7" },
   { chord: "maj7", display: "Maj 7" },
@@ -262,6 +263,19 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 4, finger: "4" },
           { string: 4, fret: 2, finger: "2" },
           { string: 5, fret: 3, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Adim",
+      chordNames: [{ key: "A", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 0 },
+          { string: 2, fret: 1, finger: "1" },
+          { string: 3, fret: 2, finger: "3" },
+          { string: 4, fret: 1, finger: "2" }
         ],
         ukulele: []
       }
@@ -527,6 +541,19 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: []
       }
+    },
+    dim: {
+      text: "A♯/B♭dim",
+      chordNames: [{ key: "A", sharp: true, flat: false, aux: "" },
+          { key: "B", sharp: false, flat: true, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 1, finger: "1", barre: 4 },
+          { string: 2, fret: 2, finger: "2" },
+          { string: 3, fret: 3, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -735,6 +762,18 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 6, finger: "4" },
           { string: 4, fret: 4, finger: "3" },
           { string: 5, fret: 5, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Bdim",
+      chordNames: [{ key: "B", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 2, finger: "1", barre: 4 },
+          { string: 2, fret: 3, finger: "2" },
+          { string: 3, fret: 4, finger: "3" }
         ],
         ukulele: []
       }
@@ -955,6 +994,18 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 7, finger: "4" },
           { string: 4, fret: 5, finger: "3" },
           { string: 5, fret: 6, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Cdim",
+      chordNames: [{ key: "C", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 3, finger: "1", barre: 4 },
+          { string: 2, fret: 4, finger: "2" },
+          { string: 3, fret: 5, finger: "3" }
         ],
         ukulele: []
       }
@@ -1216,6 +1267,19 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: []
       }
+    },
+    dim: {
+      text: "C♯/D♭dim",
+      chordNames: [{ key: "C", sharp: true, flat: false, aux: "" },
+          { key: "D", sharp: false, flat: true, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 4, finger: "1", barre: 4 },
+          { string: 2, fret: 5, finger: "2" },
+          { string: 3, fret: 6, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -1430,6 +1494,18 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 9, finger: "4" },
           { string: 4, fret: 7, finger: "3" },
           { string: 5, fret: 8, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Ddim",
+      chordNames: [{ key: "D", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 5, finger: "1", barre: 4 },
+          { string: 2, fret: 6, finger: "2" },
+          { string: 3, fret: 7, finger: "3" }
         ],
         ukulele: []
       }
@@ -1694,6 +1770,19 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: []
       }
+    },
+    dim: {
+      text: "D♯/E♭dim",
+      chordNames: [{ key: "D", sharp: true, flat: false, aux: "" },
+          { key: "E", sharp: false, flat: true, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 6, finger: "1", barre: 4 },
+          { string: 2, fret: 7, finger: "2" },
+          { string: 3, fret: 8, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -1927,6 +2016,18 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: []
       }
+    },
+    dim: {
+      text: "Edim",
+      chordNames: [{ key: "E", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 7, finger: "1", barre: 4 },
+          { string: 2, fret: 8, finger: "2" },
+          { string: 3, fret: 9, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -2148,6 +2249,18 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 12, finger: "4" },
           { string: 4, fret: 10, finger: "3" },
           { string: 5, fret: 11, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Fdim",
+      chordNames: [{ key: "F", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 8, finger: "1", barre: 4 },
+          { string: 2, fret: 9, finger: "2" },
+          { string: 3, fret: 10, finger: "3" }
         ],
         ukulele: []
       }
@@ -2426,6 +2539,19 @@ const KEYS: Record<string, any> = {
         ],
         ukulele: []
       }
+    },
+    dim: {
+      text: "F♯/G♭dim",
+      chordNames: [{ key: "F", sharp: true, flat: false, aux: "" },
+          { key: "G", sharp: false, flat: true, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 9, finger: "1", barre: 4 },
+          { string: 2, fret: 10, finger: "2" },
+          { string: 3, fret: 11, finger: "3" }
+        ],
+        ukulele: []
+      }
     }
   },
 
@@ -2652,6 +2778,18 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 14, finger: "4" },
           { string: 4, fret: 12, finger: "3" },
           { string: 5, fret: 13, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "Gdim",
+      chordNames: [{ key: "G", sharp: false, flat: false, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 10, finger: "1", barre: 4 },
+          { string: 2, fret: 11, finger: "2" },
+          { string: 3, fret: 12, finger: "3" }
         ],
         ukulele: []
       }
@@ -2924,6 +3062,19 @@ const KEYS: Record<string, any> = {
           { string: 3, fret: 15, finger: "4" },
           { string: 4, fret: 13, finger: "3" },
           { string: 5, fret: 14, finger: "3" }
+        ],
+        ukulele: []
+      }
+    },
+    dim: {
+      text: "G♯/A♭dim",
+      chordNames: [{ key: "G", sharp: true, flat: false, aux: "" },
+          { key: "A", sharp: false, flat: true, aux: "dim" }],
+      chordNotes: {
+        guitar: [
+          { string: 1, fret: 11, finger: "1", barre: 4 },
+          { string: 2, fret: 12, finger: "2" },
+          { string: 3, fret: 13, finger: "3" }
         ],
         ukulele: []
       }
