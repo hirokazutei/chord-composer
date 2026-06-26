@@ -20,8 +20,10 @@ const D_ROOT: Record<string, number> = {
   d: 0, de: 1, e: 2, f: 3, fg: 4, g: 5, ga: 6, a: 7, ab: 8, b: 9, c: 10, cd: 11,
 };
 
-// ─── Major ───────────────────────────────────────────────────────────────────
+// ─── Major (R  M3  P5) ───────────────────────────────────────────────────────
 
+// key E:  E2=R  B2=5  E3=R  G#3=3  B3=5  E4=R
+// key A:  A2=R  E3=5  A3=R  C#4=3  E4=5  A4=R
 function eShapeMaj(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -41,6 +43,8 @@ function eShapeMaj(R: number): ChordNote[] {
   ];
 }
 
+// key A:  x  A2=R  E3=5  A3=R  C#4=3  E4=5
+// key D:  x  D3=R  A3=5  D4=R  F#4=3  A4=5
 function aShapeMaj(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -59,8 +63,10 @@ function aShapeMaj(R: number): ChordNote[] {
   ];
 }
 
-// ─── Minor ───────────────────────────────────────────────────────────────────
+// ─── Minor (R  m3  P5) ───────────────────────────────────────────────────────
 
+// key E:  E2=R  B2=5  E3=R  G3=m3  B3=5  E4=R
+// key Am: A2=R  E3=5  A3=R  C4=m3  E4=5  A4=R
 function eShapeMin(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -79,6 +85,8 @@ function eShapeMin(R: number): ChordNote[] {
   ];
 }
 
+// key Am:  x  A2=R  E3=5  A3=R  C4=m3  E4=5
+// key Dm:  x  D3=R  A3=5  D4=R  F4=m3  A4=5
 function aShapeMin(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -97,9 +105,11 @@ function aShapeMin(R: number): ChordNote[] {
   ];
 }
 
-// ─── Dominant 7th ────────────────────────────────────────────────────────────
-// E7 open: 0-2-0-1-0-0  (str2 at R = b7, str3 at R+1 = 3rd; others via barre)
+// ─── Dominant 7th (R  M3  P5  m7) ───────────────────────────────────────────
 
+// key E7:  E2=R  B2=5  D3=b7  G#3=3  B3=5  E4=R
+// key A7:  A2=R  E3=5  G3=b7  C#4=3  E4=5  A4=R
+// str2 falls to barre fret on the movable shape, which gives the b7 — intentional
 function e7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -118,7 +128,9 @@ function e7Shape(R: number): ChordNote[] {
   ];
 }
 
-// A7 open: x-0-2-0-2-0  (str3,5 at R via barre = b7 and 5th)
+// key A7:  x  A2=R  E3=5  G3=b7  C#4=3  E4=5
+// key D7:  x  D3=R  A3=5  C4=b7  F#4=3  A4=5
+// str3 and str5 sit at barre fret — b7 and 5th respectively
 function a7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -136,9 +148,11 @@ function a7Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Minor 7th ───────────────────────────────────────────────────────────────
-// Em7 open: 0-2-0-0-0-0  (str2-5 at R via barre = b7/b3/5th/root)
+// ─── Minor 7th (R  m3  P5  m7) ───────────────────────────────────────────────
 
+// key Em7:  E2=R  B2=5  D3=b7  G3=m3  B3=5  E4=R
+// key Am7:  A2=R  E3=5  G3=b7  C4=m3  E4=5  A4=R
+// str2,3,4,5 all sit at barre fret: b7, m3, 5th, root
 function em7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -156,7 +170,8 @@ function em7Shape(R: number): ChordNote[] {
   ];
 }
 
-// Am7 open: x-0-2-0-1-0  (str3,5 at R via barre = b7 and 5th)
+// key Am7:  x  A2=R  E3=5  G3=b7  C4=m3  E4=5
+// key Dm7:  x  D3=R  A3=5  C4=b7  F4=m3  A4=5
 function am7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -174,9 +189,10 @@ function am7Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Major 7th ───────────────────────────────────────────────────────────────
-// Emaj7 open: 0-2-1-1-0-0  (str2 at R+1 = maj7, str3 at R+1 = 3rd)
+// ─── Major 7th (R  M3  P5  M7) ───────────────────────────────────────────────
 
+// key Emaj7:  E2=R  B2=5  D#3=M7  G#3=3  B3=5  E4=R
+// key Amaj7:  A2=R  E3=5  G#3=M7  C#4=3  E4=5  A4=R
 function emaj7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -196,7 +212,8 @@ function emaj7Shape(R: number): ChordNote[] {
   ];
 }
 
-// Amaj7 open: x-0-2-1-2-0  (str3 at R+1 = maj7)
+// key Amaj7:  x  A2=R  E3=5  G#3=M7  C#4=3  E4=5
+// key Dmaj7:  x  D3=R  A3=5  C#4=M7  F#4=3  A4=5
 function amaj7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -215,9 +232,11 @@ function amaj7Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Sus4 ─────────────────────────────────────────────────────────────────────
-// Esus4 open: 0-2-2-2-0-0  (str1,2,3 all at R+2)
+// ─── Sus4 (R  P4  P5 — no 3rd) ───────────────────────────────────────────────
 
+// key Esus4:  E2=R  B2=5  E3=R  A3=4  B3=5  E4=R
+// key Asus4:  A2=R  E3=5  A3=R  D4=4  E4=5  A4=R
+// outer barre covers str0/4/5; mini-barre at R+2 covers str1(5th)/str2(R)/str3(4th)
 function esus4Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -236,7 +255,8 @@ function esus4Shape(R: number): ChordNote[] {
   ];
 }
 
-// Asus4 open: x-0-2-2-3-0  (str4 at R+3 = 4th)
+// key Asus4:  x  A2=R  E3=5  A3=R  D4=4  E4=5
+// key Dsus4:  x  D3=R  A3=5  D4=R  G4=4  A4=5
 function asus4Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -255,9 +275,11 @@ function asus4Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Sus2 ─────────────────────────────────────────────────────────────────────
-// Asus2 open: x-0-2-2-0-0  (str4,5 at R via barre = 2nd and 5th)
+// ─── Sus2 (R  M2  P5 — no 3rd) ───────────────────────────────────────────────
 
+// key Asus2:  x  A2=R  E3=5  A3=R  B3=2  E4=5
+// key Dsus2:  x  D3=R  A3=5  D4=R  E4=2  A4=5
+// str4 sits at barre fret giving M2; str5 gives P5
 function asus2Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -276,8 +298,10 @@ function asus2Shape(R: number): ChordNote[] {
 }
 
 // ─── D-shape Major ────────────────────────────────────────────────────────────
-// D open: xx-0-2-3-2  (str3=5th, str4=root oct, str5=3rd; str3 & str5 at R+2)
 
+// key D:  x  x  D3=R  A3=5  D4=R  F#4=3
+// key G:  x  x  G3=R  D4=5  G4=R  B4=3
+// mini-barre at R+2 covers str3(5th)/str5(M3); str4 overrides at R+3 (root octave)
 function dShapeMaj(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -296,8 +320,9 @@ function dShapeMaj(R: number): ChordNote[] {
 }
 
 // ─── D-shape Minor ────────────────────────────────────────────────────────────
-// Dm open: xx-0-2-3-1  (str5=b3 at R+1 differs from major)
 
+// key Dm:  x  x  D3=R  A3=5  D4=R  F4=m3
+// key Gm:  x  x  G3=R  D4=5  G4=R  Bb4=m3
 function dShapeMin(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -316,8 +341,9 @@ function dShapeMin(R: number): ChordNote[] {
 }
 
 // ─── D-shape Dominant 7th ────────────────────────────────────────────────────
-// D7 open: xx-0-2-1-2  (str4=b7 at R+1; str3 & str5 both at R+2)
 
+// key D7:  x  x  D3=R  A3=5  C4=b7  F#4=3
+// key G7:  x  x  G3=R  D4=5  F4=b7  B4=3
 function d7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -336,8 +362,10 @@ function d7Shape(R: number): ChordNote[] {
 }
 
 // ─── D-shape Minor 7th ───────────────────────────────────────────────────────
-// Dm7 open: xx-0-2-1-1  (str4 & str5 both at R+1 = b7 and b3)
 
+// key Dm7:  x  x  D3=R  A3=5  C4=b7  F4=m3
+// key Gm7:  x  x  G3=R  D4=5  F4=b7  Bb4=m3
+// mini-barre at R+1 covers str4(b7) and str5(m3)
 function dm7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -354,8 +382,10 @@ function dm7Shape(R: number): ChordNote[] {
 }
 
 // ─── D-shape Major 7th ───────────────────────────────────────────────────────
-// Dmaj7 open: xx-0-2-2-2  (str3-str5 all at R+2)
 
+// key Dmaj7:  x  x  D3=R  A3=5  C#4=M7  F#4=3
+// key Gmaj7:  x  x  G3=R  D4=5  F#4=M7  B4=3
+// mini-barre at R+2 covers str3(5th)/str4(M7)/str5(M3)
 function dmaj7Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -370,8 +400,10 @@ function dmaj7Shape(R: number): ChordNote[] {
 }
 
 // ─── D-shape Sus4 ─────────────────────────────────────────────────────────────
-// Dsus4 open: xx-0-2-3-3  (str4 & str5 both at R+3 = root oct and 4th)
 
+// key Dsus4:  x  x  D3=R  A3=5  D4=R  G4=4
+// key Gsus4:  x  x  G3=R  D4=5  G4=R  C5=4
+// mini-barre at R+3 covers str4(root oct) and str5(P4)
 function dsus4Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -388,8 +420,10 @@ function dsus4Shape(R: number): ChordNote[] {
 }
 
 // ─── D-shape Sus2 ─────────────────────────────────────────────────────────────
-// Dsus2 open: xx-0-2-3-0  (str5=open=2nd; str4=root oct)
 
+// key Dsus2:  x  x  D3=R  A3=5  D4=R  E4=2
+// key Gsus2:  x  x  G3=R  D4=5  G4=R  A4=2
+// str5 at R gives M2 (one whole step above root on high-e string)
 function dsus2Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -408,11 +442,12 @@ function dsus2Shape(R: number): ChordNote[] {
 }
 
 // ─── C-shape Major ────────────────────────────────────────────────────────────
-// C open: x-3-2-0-1-0  (root on str1 at aR=3; str3,5 open=5th,3rd at aR-3)
-// Only valid when aR >= 3 (avoids negative frets on str3/str5).
 
+// key C (aR=3):  x  C3=R  E3=3  G3=5  C4=R  E4=3
+// key F (aR=8):  x  F3=R  A3=3  C4=5  F4=R  A4=3
+// Only valid when aR >= 3 (avoids negative frets on str3/str5).
+// mini-barre at aR-3 covers str3(5th) and str5(M3); str4 overrides at aR-2 (root)
 function cShapeMaj(aR: number): ChordNote[] {
-  // partial barre at aR-3 covers str3-str5 (5th, root, 3rd); str4 overridden
   return [
     { string: 1, fret: aR, finger: "4" },
     { string: 2, fret: aR - 1, finger: "3" },
@@ -421,9 +456,11 @@ function cShapeMaj(aR: number): ChordNote[] {
   ];
 }
 
-// ─── Major 6th ───────────────────────────────────────────────────────────────
-// E6 open: 0-2-2-1-2-0  (str4 at R+2 = 6th; str5 open = root)
+// ─── Major 6th (R  M3  P5  M6) ───────────────────────────────────────────────
 
+// key E6:  E2=R  B2=5  E3=R  G#3=3  C#4=6  E4=R
+// key A6:  A2=R  E3=5  A3=R  C#4=3  F#4=6  A4=R
+// str2 explicitly fretted at R+2 (root) to avoid barre producing b7
 function e6Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -444,7 +481,9 @@ function e6Shape(R: number): ChordNote[] {
   ];
 }
 
-// A6: str2-str5 all at R+2 (5th/root/3rd/6th) — mini-barre across 4 strings
+// key A6:  x  A2=R  E3=5  A3=R  C#4=3  F#4=6
+// key D6:  x  D3=R  A3=5  D4=R  F#4=3  B4=6
+// mini-barre at R+2 covers str2(5th)/str3(R)/str4(M3)/str5(M6)
 function a6Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -458,9 +497,11 @@ function a6Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Augmented ───────────────────────────────────────────────────────────────
-// E-aug open: 0-3-2-1-1-0  (descending staircase: +3/+2/+1/+1 offsets from barre)
+// ─── Augmented (R  M3  A5) ───────────────────────────────────────────────────
 
+// key Eaug:  E2=R  C3=#5  E3=R  G#3=3  C4=#5  E4=R
+// key Aaug:  A2=R  F3=#5  A3=R  C#4=3  F4=#5  A4=R
+// mini-barre at R+1 covers str3(M3) and str4(A5); str1 and str2 individually fretted
 function eShapeAug(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -480,7 +521,9 @@ function eShapeAug(R: number): ChordNote[] {
   ];
 }
 
-// A-aug open: x-0-3-2-2-1
+// key Aaug:  x  A2=R  F3=#5  A3=R  C#4=3  F4=#5
+// key Daug:  x  D3=R  Bb3=#5  D4=R  F#4=3  Bb4=#5
+// mini-barre at R+2 covers str3(root)/str4(M3); str2 and str5 individually fretted
 function aShapeAug(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -499,9 +542,10 @@ function aShapeAug(R: number): ChordNote[] {
   ];
 }
 
-// ─── Add9 ─────────────────────────────────────────────────────────────────────
-// Aadd9 open: x-0-2-4-2-0  (9th at G+4 on str3)
+// ─── Add9 (R  M3  P5  M9 — no 7th) ──────────────────────────────────────────
 
+// key Aadd9:  x  A2=R  E3=5  B3=9  C#4=3  E4=5   (used for aR=0,1,2)
+// key Badd9:  x  B2=R  F#3=5  C#4=9  D#4=3  F#4=5
 function aShapeAdd9Low(R: number): ChordNote[] {
   // For low A_ROOT (0-2): 9th sits on str3 at R+4
   return [
@@ -513,7 +557,9 @@ function aShapeAdd9Low(R: number): ChordNote[] {
   ];
 }
 
-// Cadd9 shape: x-3-2-0-3-0 — str4 carries the 9th; works when aR >= 3
+// key Cadd9 (aR=3):  x  C3=R  E3=3  G3=5  D4=9  E4=3
+// key Dadd9 (aR=5):  x  D3=R  F#3=3  A3=5  E4=9  F#4=3
+// str4 at aR gives M9; str3/str5 at aR-3 give 5th and M3
 function cShapeAdd9(R: number): ChordNote[] {
   const s3 = Math.max(0, R - 3);
   return [
@@ -525,7 +571,10 @@ function cShapeAdd9(R: number): ChordNote[] {
   ];
 }
 
-// Eadd9 shape: barre + 9th on str5 (eR+2)
+// key Eadd9 (open):  E2=R  B2=5  [str2 omitted]  G#3=3  [str4 omitted]  F#4=9
+// key Aadd9 (barre): A2=R  E3=5  A3=R  C#4=3  E4=5  B4=9
+// open: str2 and str4 deliberately omitted (no b7 to avoid)
+// barre: str2 explicitly set to R+2 (root) to override barre's b7
 function eShapeAdd9(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -544,9 +593,11 @@ function eShapeAdd9(R: number): ChordNote[] {
   ];
 }
 
-// ─── 7sus4 ────────────────────────────────────────────────────────────────────
-// A7sus4 open: x-0-2-0-3-0  (str4=4th at R+3; str3,5 at R via barre = b7 and 5th)
+// ─── 7sus4 (R  P4  P5  m7 — no 3rd) ─────────────────────────────────────────
 
+// key A7sus4:  x  A2=R  E3=5  G3=b7  D4=4  E4=5
+// key D7sus4:  x  D3=R  A3=5  C4=b7  G4=4  A4=5
+// str3 and str5 at barre fret give b7 and 5th; str4 at R+3 gives P4
 function a7sus4Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -564,7 +615,9 @@ function a7sus4Shape(R: number): ChordNote[] {
   ];
 }
 
-// E7sus4 open: 0-2-0-2-3-0  (str3=4th at R+2; str4=b7 at R+3)
+// key E7sus4:  E2=R  B2=5  D3=b7  A3=4  D4=b7  E4=R
+// key A7sus4:  A2=R  E3=5  G3=b7  D4=4  G4=b7  A4=R
+// str2 at barre fret = b7; str3 at R+2 = P4; str4 at R+3 = b7 (doubling)
 function e7sus4Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -584,9 +637,11 @@ function e7sus4Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Minor 9th ────────────────────────────────────────────────────────────────
-// Em9 barre shape: barre at R + 9th on str5 (R+2); str4 via barre = b3
+// ─── Minor 9th (R  m3  P5  m7  M9) ──────────────────────────────────────────
 
+// key Em9:  E2=R  B2=5  D3=b7  G3=m3  B3=5  F#4=9
+// key Am9:  A2=R  E3=5  G3=b7  C4=m3  E4=5  B4=9
+// str2,3,4 at barre fret give b7, m3, 5th; str5 at R+2 gives M9
 function em9Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -605,7 +660,11 @@ function em9Shape(R: number): ChordNote[] {
   ];
 }
 
-// Am9 shell: root/5th/b3/9th on str1-2-4-5 (no barre)
+// key Am9 shell:  x  A2=R  E3=5  [str3 omitted]  C4=m3  B4=9
+// key Dm9 shell:  x  D3=R  A3=5  [str3 omitted]  F4=m3  E4=9 (open)
+// NOTE: this voicing omits the b7, making it technically Am(add9).
+// It is a common shell voicing that implies m9 colour without the full stack.
+// (R+7)%12 keeps the M9 on str5 within fret 0-11 across all keys
 function am9Shape(R: number): ChordNote[] {
   const ninth = (R + 7) % 12;
   if (R === 0) {
@@ -624,9 +683,11 @@ function am9Shape(R: number): ChordNote[] {
   ];
 }
 
-// ─── Major 9th ────────────────────────────────────────────────────────────────
-// Emaj9: Emaj7 barre shape with 9th added on str5 (R+2)
+// ─── Major 9th (R  M3  P5  M7  M9) ──────────────────────────────────────────
 
+// key Emaj9:  E2=R  B2=5  D#3=M7  G#3=3  B3=5  F#4=9
+// key Amaj9:  A2=R  E3=5  G#3=M7  C#4=3  E4=5  B4=9
+// mini-barre at R+1 covers str2(M7)/str3(M3); str5 at R+2 gives M9
 function emaj9Shape(R: number): ChordNote[] {
   if (R === 0) {
     return [
@@ -646,7 +707,9 @@ function emaj9Shape(R: number): ChordNote[] {
   ];
 }
 
-// Amaj9 shell: root/5th/maj7/3rd on str1-2-3-4, 9th on str5 at R+7
+// key Amaj9 shell:  x  A2=R  E3=5  G#3=M7  C#4=3  B4=9
+// key Dmaj9 shell:  x  D3=R  A3=5  C#4=M7  F#4=3  E4=9 (open)
+// (R+7)%12 keeps the M9 on str5 within fret 0-11 across all keys
 function amaj9Shape(R: number): ChordNote[] {
   const ninth = (R + 7) % 12;
   if (R === 0) {
