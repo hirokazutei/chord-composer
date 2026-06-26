@@ -98,7 +98,7 @@ class KeyModifier extends Component<Props> {
             {INDEX_CHORD.slice(0, 5).map(chord => this.renderChordButton(chord))}
           </div>
           <div style={styles.row}>
-            {INDEX_CHORD.slice(5, 10).map(chord => this.renderChordButton(chord))}
+            {INDEX_CHORD.slice(5, 9).map(chord => this.renderChordButton(chord))}
           </div>
         </div>
       </div>

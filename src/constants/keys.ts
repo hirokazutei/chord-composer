@@ -21,7 +21,6 @@ export const INDEX_CHORD = [
   { chord: "maj7", display: "Maj 7" },
   { chord: "sus4", display: "Sus 4" },
   { chord: "sus2", display: "Sus 2" },
-  { chord: "fiv", display: "Power" },
   { chord: "six", display: "Maj 6" },
   { chord: "dom9", display: "Dom 9" },
 ];
