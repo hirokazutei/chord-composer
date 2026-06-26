@@ -29,7 +29,10 @@ const styles = {
   },
 };
 
-type Props = State & { addNoteAt: (string: number, fret: number) => void };
+type Props = State & {
+  addNoteAt: (string: number, fret: number, barre?: number) => void;
+  moveNote: (index: number, string: number, fret: number) => void;
+};
 
 class P5Wrapper extends Component<Props> {
   canvas: any;
@@ -38,11 +41,13 @@ class P5Wrapper extends Component<Props> {
     this.canvas = new (window as any).p5(sketch, "canvas-container");
     this.canvas.props = this.props;
     this.canvas.onNoteClick = this.props.addNoteAt;
+    this.canvas.onMoveNote = this.props.moveNote;
   }
 
   shouldComponentUpdate(nextProps: Props): boolean {
     this.canvas.props = nextProps;
     this.canvas.onNoteClick = nextProps.addNoteAt;
+    this.canvas.onMoveNote = nextProps.moveNote;
     return false;
   }
 
@@ -61,8 +66,10 @@ class P5Wrapper extends Component<Props> {
 
 const mapStateToProps = (state: State) => state;
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
-  addNoteAt: (string: number, fret: number) =>
-    dispatch({ type: actionTypes.ADD_NOTE_AT, string, fret }),
+  addNoteAt: (string: number, fret: number, barre?: number) =>
+    dispatch({ type: actionTypes.ADD_NOTE_AT, string, fret, barre }),
+  moveNote: (index: number, string: number, fret: number) =>
+    dispatch({ type: actionTypes.UPDATE_NOTE, index, string, fret }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(P5Wrapper);

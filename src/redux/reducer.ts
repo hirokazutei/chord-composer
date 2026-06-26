@@ -272,8 +272,16 @@ export const reducer = (state: State = initialState, action: any): State => {
         string: action.string,
         fret: action.fret,
         finger: null,
-        barre: null
+        barre: action.barre ?? null
       });
+      break;
+    }
+    // UPDATE_NOTE (drag-move an existing note)
+    case actionTypes.UPDATE_NOTE: {
+      const updated = { ...newCustomChordNotes[action.index] };
+      updated.string = action.string;
+      updated.fret = action.fret;
+      newCustomChordNotes[action.index] = updated;
       break;
     }
     // DELETE_NOTE

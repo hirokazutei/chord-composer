@@ -31,6 +31,8 @@ const styles = {
   rightSide: {
     display: "flex",
     flexDirection: "column" as const,
+    width: 332,
+    flexShrink: 0,
   },
 };
 
