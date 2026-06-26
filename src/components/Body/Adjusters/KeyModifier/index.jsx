@@ -1,4 +1,3 @@
-/* @flow */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import type { Dispatch } from "redux";
@@ -10,97 +9,81 @@ import type { State } from "../../../../constants/types";
 
 const styles = {
   border: {
-    ...DEFAULT_STYLE.border
+    ...DEFAULT_STYLE.border,
   },
   button: {
-    fontSize: 20,
+    ...DEFAULT_STYLE.button,
+    fontSize: 14,
     minHeight: 40,
-    minWidth: 100,
-    ...DEFAULT_STYLE.button
+    minWidth: 90,
   },
   buttonSelected: {
-    fontSize: 20,
-    minHeight: 40,
-    minWidth: 100,
     ...DEFAULT_STYLE.button,
-    backgroundColor: PALETTE.tealDark
+    fontSize: 14,
+    minHeight: 40,
+    minWidth: 90,
+    backgroundColor: PALETTE.accent,
+    borderColor: PALETTE.accent,
+    color: PALETTE.white,
+    boxShadow: `0 0 12px ${PALETTE.accentGlow}`,
   },
   row: {
     display: "flex",
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    gap: 4,
+    marginBottom: 4,
   },
   title: {
-    ...DEFAULT_STYLE.title
+    ...DEFAULT_STYLE.title,
   },
   view: {
-    margin: "10px 5px 10px 5px"
-  }
+    margin: "8px 0",
+  },
 };
 
-type StateProps = {
-  currentChord: string
-};
-
+type StateProps = { currentChord: string };
 type Props = Dispatch & StateProps;
 
-/**
- * Key Modifiers
- * @prop {Dispatch} props  - Properties
- */
 class KeyModifier extends Component<Props> {
-  /**
-   * Change Chord
-   * @param {string} chord - Chord
-   */
   changeChord = (chord: string) => {
-    this.props.dispatch({
-      type: actionTypes.CHANGE_CHORD,
-      chord
-    });
+    this.props.dispatch({ type: actionTypes.CHANGE_CHORD, chord });
   };
 
-  /**
-   * Render
-   */
   render() {
     return (
       <div style={styles.view}>
         <div style={styles.border}>
-          <h3 style={styles.title}>CHORDS</h3>
+          <h3 style={styles.title}>Chord</h3>
           <div style={styles.row}>
-            {INDEX_CHORD.slice(0, 4).map(chord => {
-              return (
-                <button
-                  onClick={() => this.changeChord(chord.chord)}
-                  key={chord.chord}
-                  style={
-                    this.props.currentChord === chord.chord
-                      ? styles.buttonSelected
-                      : styles.button
-                  }
-                >
-                  {chord.display}
-                </button>
-              );
-            })}
+            {INDEX_CHORD.slice(0, 4).map(chord => (
+              <button
+                onClick={() => this.changeChord(chord.chord)}
+                key={chord.chord}
+                style={
+                  this.props.currentChord === chord.chord
+                    ? styles.buttonSelected
+                    : styles.button
+                }
+              >
+                {chord.display}
+              </button>
+            ))}
           </div>
           <div style={styles.row}>
-            {INDEX_CHORD.slice(4, 8).map(chord => {
-              return (
-                <button
-                  onClick={() => this.changeChord(chord.chord)}
-                  key={chord.chord}
-                  style={
-                    this.props.currentChord === chord.chord
-                      ? styles.buttonSelected
-                      : styles.button
-                  }
-                >
-                  {chord.display}
-                </button>
-              );
-            })}
+            {INDEX_CHORD.slice(4, 8).map(chord => (
+              <button
+                onClick={() => this.changeChord(chord.chord)}
+                key={chord.chord}
+                style={
+                  this.props.currentChord === chord.chord
+                    ? styles.buttonSelected
+                    : styles.button
+                }
+              >
+                {chord.display}
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -108,10 +91,6 @@ class KeyModifier extends Component<Props> {
   }
 }
 
-/**
- * Map State to Props
- * @param {State} state - State
- */
 const mapStateToProps = (state: State): StateProps => {
   const { currentChord } = state;
   return { currentChord };

@@ -1,4 +1,3 @@
-/* @flow */
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import sketch from "./sketch";
@@ -8,19 +7,25 @@ import { PALETTE } from "../../../constants/palette";
 
 const styles = {
   base: {
-    backgroundColor: PALETTE.white,
-    borderRadius: 10,
-    boxShadow: "0px 0px 20px #196472",
+    backgroundColor: PALETTE.surface,
+    backdropFilter: "blur(12px)",
+    WebkitBackdropFilter: "blur(12px)",
+    borderRadius: 16,
+    border: "1px solid rgba(255,255,255,0.08)",
+    boxShadow: `0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(99,102,241,0.1)`,
     display: "flex",
     flexDirection: "column",
-    height: 710,
+    alignItems: "center",
     justifyContent: "center",
-    margin: 25
+    height: 710,
+    padding: 20,
   },
   sketch: {
     height: 670,
-    width: 520
-  }
+    width: 520,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
 };
 
 type Props = State;
@@ -28,33 +33,20 @@ type Props = State;
 class P5Wrapper extends Component<Props> {
   canvas: any;
 
-  /**
-   * Component Did Mount
-   */
   componentDidMount() {
     this.canvas = new window.p5(sketch, "canvas-container");
     this.canvas.props = this.props;
   }
 
-  /**
-   * Should Component Updatte
-   * @param {State} state - State
-   */
   shouldComponentUpdate(state: State): boolean {
     this.canvas.props = state;
     return false;
   }
 
-  /**
-   * Component Will Unmount
-   */
   componentWillUnmount() {
     this.canvas.remove();
   }
 
-  /**
-   * Render
-   */
   render() {
     return (
       <div style={styles.base}>
@@ -64,9 +56,6 @@ class P5Wrapper extends Component<Props> {
   }
 }
 
-// State passed down to the sketch.
 export default connect(
-  (state: State): State => {
-    return state;
-  }
+  (state: State): State => state
 )(P5Wrapper);
