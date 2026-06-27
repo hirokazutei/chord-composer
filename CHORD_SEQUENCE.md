@@ -6,19 +6,27 @@ Design document for parsing a series of chord symbols and generating a row of ch
 
 ## Overview
 
-The user types a sequence of chord symbols in standard notation (e.g. `Am7 Dm7 G7 Cmaj7`), the app parses each token into its internal key + chord-type codes, renders every diagram using the existing p5.js sketch engine, stitches the canvases into one wide image, and offers a PNG download.
+Two input modes are supported. Both produce the same output: a strip of chord diagram images that can be saved as PNG.
+
+- **Symbol mode** — standard chord names (`Am7 Dm7 G7 Cmaj7`). Fast to type; uses the app's built-in voicing library.
+- **Note mode** — explicit note placement per string (`E2:0, B2:1, G#3:3`). Full control over every finger; the app computes frets from the note names.
+
+The two modes cannot be mixed within a single sequence. The parser auto-detects which mode is in use based on whether the first chord token contains `:`.
 
 ---
 
-## Input Format
+## Mode 1 — Symbol Input
 
-Chord symbols are whitespace-separated tokens on one or more lines. Bar lines (`|`) are optional and ignored. Examples:
+### Format
+
+Chord symbols are whitespace-separated tokens on one or more lines. Bar lines (`|`) are optional and ignored.
 
 ```
 Am7 Dm7 G7 Cmaj7
 | Cmaj7 | Am7 | Dm7 | G7 |
-Bm7b5 E7 Am
 ```
+
+Each token maps to the app's internal `key` + `chord` codes via the tables below.
 
 ### Root note tokens
 
@@ -37,11 +45,9 @@ Bm7b5 E7 Am
 | `A#` / `Bb` | `ab` |
 | `B`     | `b`  |
 
-Both `#` and `b` are case-sensitive on the accidental. The root letter itself is case-insensitive.
+Root letter is case-insensitive; accidental (`#` / `b`) is case-sensitive.
 
-### Quality suffixes → internal chord codes
-
-The suffix is everything after the root note (and optional accidental).
+### Quality suffixes
 
 | Written suffix (case-insensitive) | Internal chord |
 |---|---|
@@ -61,95 +67,132 @@ The suffix is everything after the root note (and optional accidental).
 | `m9`, `min9`, `-9` | `m9` |
 | `maj9`, `M9`, `△9`, `Δ9` | `maj9` |
 
-Anything not in this table is an **unrecognised quality** and is reported as a parse error for that token (the remaining tokens still render).
-
 ### Voicing selection
 
-Each token may optionally include a voicing index suffix in square brackets:
+Append `[n]` (zero-indexed) to request a specific voicing shape:
 
 ```
 Am7[1] Dm7 G7[2] Cmaj7
 ```
 
-`[1]` means use the second voicing (zero-indexed, same as the app's `currentVoicingIndex`). If omitted, the first voicing (index `0`) is used.
+If omitted, voicing index `0` is used.
+
+---
+
+## Mode 2 — Note Input
+
+### Concept
+
+Each chord is described as a comma-separated list of **note placements**. Each placement states: which note (pitch class + octave) should sound on which guitar string. The app computes the required fret automatically.
+
+```
+E2:0, B2:1, E3:2, G#3:3, B3:4, E4:5
+```
+
+This describes an open E major chord: E on string 0 at fret 0, B on string 1 at fret 2, etc.
+
+### Syntax
+
+```
+<NoteName><Octave>:<StringNumber>
+```
+
+- **NoteName** — pitch letter (`A`–`G`), optionally followed by `#` or `b`. Case-insensitive.
+- **Octave** — integer (2–6 for guitar range).
+- **StringNumber** — `0`–`5` for guitar (0 = low E), `0`–`3` for ukulele.
+
+Notes within one chord are comma-separated. Chords in a sequence are separated by a **semicolon** or a **newline**:
+
+```
+E2:0, B2:1, E3:2, G#3:3, B3:4, E4:5
+A2:1, E3:2, A3:3, C#4:4, E4:5
+D3:2, A3:3, D4:4, F#4:5
+```
+
+Strings not mentioned are muted (not shown on the diagram).
+
+### Fret computation
+
+Guitar open string pitches (in MIDI):
+
+| String | Note | MIDI |
+|--------|------|------|
+| 0 | E2 | 40 |
+| 1 | A2 | 45 |
+| 2 | D3 | 50 |
+| 3 | G3 | 55 |
+| 4 | B3 | 59 |
+| 5 | E4 | 64 |
+
+```
+fret = midi(NoteName + Octave) - openMidi(StringNumber)
+```
+
+If `fret < 0`, the note cannot be played on that string — reported as a placement error. If `fret === 0`, the string is played open.
+
+**Example:** `C4:2` → C4 = MIDI 60, D3 open = MIDI 50 → fret 10.  
+**Example:** `E3:2` → E3 = MIDI 52, D3 open = MIDI 50 → fret 2.
+
+### Chord label
+
+By default the rendered diagram has no name label. An optional label can be appended after a space before the semicolon/newline:
+
+```
+E2:0, B2:1, E3:2, G#3:3, B3:4, E4:5 "E"
+A2:1, E3:2, A3:3, C#4:4, E4:5 "A"
+```
+
+The quoted string is displayed above the diagram exactly as written.
+
+### Barre notation
+
+To mark a barre, append `~<endString>` to the lowest-string note in the barre:
+
+```
+A2:1~5, C#4:4, E4:5 "A (barre)"
+```
+
+`~5` means the barre extends from string 1 through string 5 at that fret. This maps directly to the `barre` field in `ChordNote`.
 
 ---
 
 ## Parsing Algorithm
 
-```
-function parseChordSequence(text: string): ParseResult[]
-```
-
-1. Strip `|` characters, split on whitespace, filter empty tokens.
-2. For each token:
-   a. Match the leading root with regex `^([A-Ga-g])(#|b)?`
-   b. Extract the optional `[\d+]` suffix at the end; parse as voicing index.
-   c. The remainder between root and bracket is the quality suffix.
-   d. Look up root → key code (table above).
-   e. Look up suffix → chord code (table above).
-   f. Call `getVoicings(key, chord)` to confirm the combination exists; if it returns `null`, mark as error.
-3. Return `Array<{ key: string; chord: string; voicingIndex: number; raw: string } | { error: string; raw: string }>`.
-
----
-
-## Rendering
-
-Each parsed chord is rendered independently using the same logic the main p5.js sketch uses. The implementation approach:
-
-### Option A — Offscreen p5 graphics (recommended)
-
-p5.js provides `createGraphics(w, h)` which returns an off-screen buffer that supports the same drawing API as the main canvas. The sketch's drawing function is factored so it accepts a graphics target instead of always writing to `this`:
-
 ```ts
-function drawChordDiagram(
-  pg: p5.Graphics,
-  chordNotes: ChordNote[],
-  chordNames: ChordName[],
-  settings: Settings
-): void
+type ParsedChord =
+  | { mode: "symbol"; key: string; chord: string; voicingIndex: number; raw: string }
+  | { mode: "note";   notes: ChordNote[]; label?: string; raw: string }
+  | { error: string; raw: string };
+
+function parseChordSequence(text: string): ParsedChord[]
 ```
 
-Steps:
-1. For each parsed chord, compute `chordNotes` and `chordNames` the same way the reducer does.
-2. Call `drawChordDiagram(pg, ...)` into a fresh offscreen buffer.
-3. After all diagrams are drawn, create one final canvas wide enough to hold them side-by-side (plus padding).
-4. Copy each buffer onto the final canvas using `image(pg, x, 0)`.
-5. Call `canvas.elt.toDataURL('image/png')` and trigger a download.
+**Symbol mode detection:** if no token in the input contains `:`, use symbol mode.
 
-### Option B — Sequential DOM render
-
-Render one chord at a time by temporarily updating the Redux state and capturing the canvas via `toDataURL` after each render cycle. Simpler to wire up but requires one React render cycle per chord, which is slow and fragile.
-
-**Option A is preferred** — it is synchronous, doesn't touch global state, and doesn't depend on render timing.
-
-### Canvas dimensions
-
-Single diagram: same as the current app canvas (width ~520px, height ~680px based on `DESIGN_WIDTH` / `DESIGN_HEIGHT` constants).
-
-Strip output: `width = diagramWidth * count + gap * (count - 1)`, `height = diagramHeight`. A gap of 16px between diagrams looks clean.
+**Note mode steps per chord block:**
+1. Split on `,` to get individual placements.
+2. For each placement, parse `NoteName Octave : StringNumber [~ endString]`.
+3. Compute fret; reject if negative.
+4. Build `ChordNote[]`.
+5. Parse optional `"label"` after the last placement.
 
 ---
 
-## UI
+## Rendering and Export
 
-### Input area
+See the Rendering section — identical for both modes. Each parsed chord produces a `ChordNote[]` which is passed to `drawChordDiagram(pg, notes, names, settings)`.
 
-A new panel (tab or modal) with:
-- A `<textarea>` for chord input, placeholder `Am7 Dm7 G7 Cmaj7`
-- A **Generate** button
-- Inline error display: unknown tokens highlighted in red with a tooltip showing what went wrong
+In symbol mode, `chordNames` comes from the `keys` lookup table. In note mode, `chordNames` is either the quoted label or empty.
 
-### Preview
+### Canvas layout
 
-Below the input, a scrollable horizontal strip shows thumbnail previews of each generated diagram. Each thumbnail is ~160px wide so a sequence of 8 chords fits without horizontal scroll on a 1110px canvas.
+Single diagram: ~520 × 680 px (current app canvas dimensions).  
+Strip output: `width = diagramWidth × count + gap × (count − 1)`, `height = diagramHeight`. 16 px gap between diagrams.
 
-### Export
+### Export options
 
-- **Download all** — stitches all diagrams into a single wide PNG and triggers a browser download named `chord-sequence.png`.
-- **Download individually** — triggers one download per chord, named `{root}{suffix}.png` (e.g. `Am7.png`).
-
-Individual download is useful when the user wants to paste diagrams into slides one at a time.
+- **Download all** — single wide PNG named `chord-sequence.png`.
+- **Download individually** — one PNG per chord, named by label or index (`chord-1.png`, `Am7.png`).
 
 ---
 
@@ -158,17 +201,15 @@ Individual download is useful when the user wants to paste diagrams into slides 
 ```
 src/
   constants/
-    chordParser.ts        # parseChordSequence(), suffix/root lookup tables
+    chordParser.ts        # parseChordSequence(), both mode parsers, fret computation
   components/
     ChordSequence/
-      index.tsx           # top-level panel (textarea + controls)
+      index.tsx           # panel: textarea + mode indicator + Generate button
       Preview.tsx         # scrollable thumbnail strip
-      export.ts           # stitching and download logic
+      export.ts           # canvas stitching and download
   components/Body/P5Wrapper/sketch/
-    drawChordDiagram.ts   # extracted drawing function that accepts a p5.Graphics target
+    drawChordDiagram.ts   # extracted drawing fn accepting a p5.Graphics target
 ```
-
-`drawChordDiagram.ts` is a refactor of the existing sketch, not new logic. The existing `sketch.ts` becomes a thin wrapper that calls it with the main canvas as the target.
 
 ---
 
@@ -176,17 +217,17 @@ src/
 
 | Situation | Behaviour |
 |---|---|
-| Unknown root (e.g. `H7`) | Token shown in red, skipped in output |
-| Unknown quality (e.g. `Cm7b5`) | Token shown in red, skipped |
-| Valid key but no voicing for that chord type | Token shown in yellow (rare; only `dim` has no voicing currently) |
-| Voicing index out of range | Clamps to last available voicing |
+| Unknown root or quality (symbol mode) | Token shown in red, skipped |
+| Note out of range for string (note mode) | Placement shown in red, that note omitted |
+| Fret > 24 | Warning; note still rendered (high fret display) |
+| Voicing index out of range | Clamps to last available |
 | Empty input | Generate button disabled |
+| Mixed modes in one sequence | Detected as symbol mode (`:` appears inside a bracket); warn if ambiguous |
 
 ---
 
-## Limitations and Future Scope
+## Limitations
 
-- **Slash chords** (`G/B`) are not parsed — the bass note after `/` is silently ignored and the chord renders as if no slash were present.
-- **Ukulele sequences** — the feature uses the app's current instrument setting. If the user is in ukulele mode, diagrams render for ukulele.
-- **Rhythm / duration** — not captured; this feature is purely about voicing diagrams, not rhythm notation.
-- **Per-chord instrument override** — not supported in v1. All chords in a sequence use the same instrument.
+- Slash chords (`G/B`) — bass note ignored, chord renders without bass indication.
+- Barre detection in note mode is explicit only; the app will not infer a barre from multiple notes at the same fret.
+- Instrument follows the app's current setting; no per-chord override.
