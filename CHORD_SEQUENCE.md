@@ -101,12 +101,12 @@ This describes an open E major chord: E on string 0 at fret 0, B on string 1 at 
 - **Octave** — integer (2–6 for guitar range).
 - **StringNumber** — `0`–`5` for guitar (0 = low E), `0`–`3` for ukulele.
 
-Notes within one chord are comma-separated. Chords in a sequence are separated by a **semicolon** or a **newline**:
+Notes within one chord are **whitespace-separated** on the same line. Chords in a sequence are separated by a **blank line**:
 
 ```
-E2:0, B2:1, E3:2, G#3:3, B3:4, E4:5
-A2:1, E3:2, A3:3, C#4:4, E4:5
-D3:2, A3:3, D4:4, F#4:5
+E2:0 B2:1 E3:2 G#3:3 B3:4 E4:5
+A2:1 E3:2 A3:3 C#4:4 E4:5
+D3:2 A3:3 D4:4 F#4:5
 ```
 
 Strings not mentioned are muted (not shown on the diagram).
@@ -135,21 +135,19 @@ If `fret < 0`, the note cannot be played on that string — reported as a placem
 
 ### Chord label
 
-By default the rendered diagram has no name label. An optional label can be appended after a space before the semicolon/newline:
+By default the rendered diagram has no name label. An optional quoted label at the end of the line is displayed above the diagram:
 
 ```
-E2:0, B2:1, E3:2, G#3:3, B3:4, E4:5 "E"
-A2:1, E3:2, A3:3, C#4:4, E4:5 "A"
+E2:0 B2:1 E3:2 G#3:3 B3:4 E4:5 "E"
+A2:1 E3:2 A3:3 C#4:4 E4:5 "A"
 ```
-
-The quoted string is displayed above the diagram exactly as written.
 
 ### Barre notation
 
 To mark a barre, append `~<endString>` to the lowest-string note in the barre:
 
 ```
-A2:1~5, C#4:4, E4:5 "A (barre)"
+A2:1~5 C#4:4 E4:5 "A (barre)"
 ```
 
 `~5` means the barre extends from string 1 through string 5 at that fret. This maps directly to the `barre` field in `ChordNote`.
@@ -170,7 +168,7 @@ function parseChordSequence(text: string): ParsedChord[]
 **Symbol mode detection:** if no token in the input contains `:`, use symbol mode.
 
 **Note mode steps per chord block:**
-1. Split on `,` to get individual placements.
+1. Split on whitespace to get individual placements.
 2. For each placement, parse `NoteName Octave : StringNumber [~ endString]`.
 3. Compute fret; reject if negative.
 4. Build `ChordNote[]`.
@@ -182,7 +180,7 @@ function parseChordSequence(text: string): ParsedChord[]
 
 See the Rendering section — identical for both modes. Each parsed chord produces a `ChordNote[]` which is passed to `drawChordDiagram(pg, notes, names, settings)`.
 
-In symbol mode, `chordNames` comes from the `keys` lookup table. In note mode, `chordNames` is either the quoted label or empty.
+In symbol mode, `chordNames` comes from the `keys` lookup table. In note mode, `chordNames` is the quoted label if provided, otherwise empty.
 
 ### Canvas layout
 
