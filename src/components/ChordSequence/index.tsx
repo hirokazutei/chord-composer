@@ -171,6 +171,10 @@ const styles = {
 
 function renderChordToCanvas(notes: any[], names: any[], p: any): HTMLCanvasElement {
   const pg = p.createGraphics(CONST.WIDTH, CONST.HEIGHT);
+  // Force 1:1 pixel density so the backing canvas matches the logical size.
+  // Without this, Retina displays create a 2× canvas and drawImage copies
+  // only the top-left quarter of the diagram.
+  pg.pixelDensity(1);
   const settings = tools.applyPresetSettings(
     { frets: 4, startingFret: 1, instrument: CONST.INSTRUMENTS.guitar },
     notes
@@ -184,11 +188,13 @@ function renderChordToCanvas(notes: any[], names: any[], p: any): HTMLCanvasElem
   tools.renderChordNotes(pg, notes, settings);
   tools.renderStartingFretText(pg, settings);
 
-  // Copy to a standalone canvas before removing the graphics buffer
+  // Copy to a standalone canvas before removing the graphics buffer.
+  // Use explicit src/dst dimensions in case pixel density wasn't reset in time.
   const out = document.createElement("canvas");
   out.width = CONST.WIDTH;
   out.height = CONST.HEIGHT;
-  out.getContext("2d")!.drawImage(pg.elt, 0, 0);
+  const ctx = out.getContext("2d")!;
+  ctx.drawImage(pg.elt, 0, 0, pg.elt.width, pg.elt.height, 0, 0, CONST.WIDTH, CONST.HEIGHT);
   pg.remove();
   return out;
 }
