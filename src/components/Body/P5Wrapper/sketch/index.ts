@@ -1,6 +1,9 @@
 import * as CONST from "../../../../constants";
 import * as tools from "./sketch";
 
+// How far above TOP_SPACE the open-string zone extends
+const OPEN_ZONE_HEIGHT = 50;
+
 type DragState =
   | { type: "move"; index: number; origString: number; origFret: number; curString: number; curFret: number }
   | { type: "new"; startString: number; startFret: number; curString: number; curFret: number };
@@ -8,10 +11,20 @@ type DragState =
 function mouseToPos(mx: number, my: number, settings: any): { string: number; fret: number } | null {
   const { frets, startingFret, instrument } = settings;
   if (mx < CONST.NECK_WIDTH_MARGIN || mx > CONST.WIDTH - CONST.NECK_WIDTH_MARGIN) return null;
-  if (my < CONST.TOP_SPACE || my > CONST.TOP_SPACE + CONST.NECK_HEIGHT) return null;
+  if (my > CONST.TOP_SPACE + CONST.NECK_HEIGHT) return null;
+
   const stringSpacing = CONST.NECK_WIDTH / (instrument.strings - 1);
-  const fretSpacing = CONST.NECK_HEIGHT / frets;
   const str = Math.max(0, Math.min(instrument.strings - 1, Math.round((mx - CONST.NECK_WIDTH_MARGIN) / stringSpacing)));
+
+  // Open-string zone: above the nut but within OPEN_ZONE_HEIGHT of it
+  if (my < CONST.TOP_SPACE) {
+    if (my >= CONST.TOP_SPACE - OPEN_ZONE_HEIGHT) {
+      return { string: str, fret: 0 };
+    }
+    return null;
+  }
+
+  const fretSpacing = CONST.NECK_HEIGHT / frets;
   const fret = Math.ceil((my - CONST.TOP_SPACE) / fretSpacing) + startingFret - 1;
   return { string: str, fret };
 }
@@ -21,13 +34,22 @@ function hitTestNotes(mx: number, my: number, notes: any[], settings: any): numb
   const stringSpacing = CONST.NECK_WIDTH / (instrument.strings - 1);
   const fretSpacing = CONST.NECK_HEIGHT / frets;
   const threshold = CONST.SIZE.note + 4;
+
   for (let i = 0; i < notes.length; i++) {
     const { string: s, fret: f } = notes[i];
-    if (!f) continue;
-    const nf = f - startingFret + 1;
-    if (nf <= 0 || nf > frets) continue;
-    const nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * s;
-    const ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+    let nx: number, ny: number;
+
+    if (!f) {
+      // Open note rendered above the nut
+      nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * s;
+      ny = CONST.TOP_SPACE - CONST.SPACING.openNote;
+    } else {
+      const nf = f - startingFret + 1;
+      if (nf <= 0 || nf > frets) continue;
+      nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * s;
+      ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+    }
+
     if (Math.abs(mx - nx) <= threshold && Math.abs(my - ny) <= threshold) return i;
   }
   return -1;
@@ -42,15 +64,23 @@ function drawDragOverlay(p: any, drag: DragState, settings: any) {
   p.noStroke();
 
   if (drag.type === "move") {
-    const nf = drag.curFret - startingFret + 1;
-    if (nf > 0 && nf <= frets) {
+    if (drag.curFret === 0) {
+      // Preview open note above the nut
       const nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * drag.curString;
-      const ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+      const ny = CONST.TOP_SPACE - CONST.SPACING.openNote;
       p.fill(80, 80, 80, 180);
-      p.ellipse(nx, ny, CONST.SIZE.note);
+      p.ellipse(nx, ny, CONST.SIZE.openNote);
+    } else {
+      const nf = drag.curFret - startingFret + 1;
+      if (nf > 0 && nf <= frets) {
+        const nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * drag.curString;
+        const ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+        p.fill(80, 80, 80, 180);
+        p.ellipse(nx, ny, CONST.SIZE.note);
+      }
     }
-  } else if (drag.type === "new" && drag.startString !== drag.curString) {
-    // Horizontal drag preview — show barre
+  } else if (drag.type === "new" && drag.startString !== drag.curString && drag.startFret !== 0) {
+    // Horizontal drag preview — show barre (not for open-zone drags)
     const nf = drag.startFret - startingFret + 1;
     if (nf > 0 && nf <= frets) {
       const minStr = Math.min(drag.startString, drag.curString);
@@ -75,6 +105,7 @@ function drawDragOverlay(p: any, drag: DragState, settings: any) {
 export default function sketch(p: any) {
   p.onNoteClick = (_s: number, _f: number, _barre?: number) => {};
   p.onMoveNote = (_index: number, _string: number, _fret: number) => {};
+  p.onDeleteNote = (_index: number) => {};
 
   let drag: DragState | null = null;
 
@@ -115,7 +146,7 @@ export default function sketch(p: any) {
     const hitIndex = hitTestNotes(p.mouseX, p.mouseY, customChordNotes, customSettings);
     if (hitIndex >= 0) {
       const n = customChordNotes[hitIndex];
-      drag = { type: "move", index: hitIndex, origString: n.string, origFret: n.fret, curString: n.string, curFret: n.fret };
+      drag = { type: "move", index: hitIndex, origString: n.string, origFret: n.fret ?? 0, curString: n.string, curFret: n.fret ?? 0 };
     } else {
       const pos = mouseToPos(p.mouseX, p.mouseY, customSettings);
       if (pos) {
@@ -141,14 +172,22 @@ export default function sketch(p: any) {
 
     if (d.type === "move") {
       if (d.curString !== d.origString || d.curFret !== d.origFret) {
+        // Moved to a new position
         p.onMoveNote(d.index, d.curString, d.curFret);
+      } else {
+        // Clicked without moving — delete the note
+        p.onDeleteNote(d.index);
       }
     } else {
       const sameFret = d.curFret === d.startFret;
       const sameString = d.curString === d.startString;
 
-      if (sameString) {
-        // Plain click: add if no duplicate
+      if (d.startFret === 0) {
+        // Started in the open zone — always add an open note (no barre for open strings)
+        const exists = customChordNotes.some((n: any) => n.string === d.startString && n.fret === 0);
+        if (!exists) p.onNoteClick(d.startString, 0);
+      } else if (sameString) {
+        // Plain click on the neck: add note
         const exists = customChordNotes.some((n: any) => n.string === d.startString && n.fret === d.startFret);
         if (!exists) p.onNoteClick(d.startString, d.startFret);
       } else if (sameFret) {
