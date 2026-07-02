@@ -1,11 +1,12 @@
 import actionTypes from "./actionTypes";
 import keys from "../constants/keys";
 import { INSTRUMENTS } from "../constants/index";
+import { getVoicings } from "../constants/voicings";
 import type { State } from "../constants/types";
 
 export const initialState = {
-  chordNotes: [],
-  chordNames: [],
+  chordNotes: (keys as any)["a"]["maj"].chordNotes[INSTRUMENTS.guitar.text] ?? [],
+  chordNames: (keys as any)["a"]["maj"].chordNames,
   custom: false,
   settings: {
     frets: 4,
@@ -14,6 +15,7 @@ export const initialState = {
   },
   currentKey: "a",
   currentChord: "maj",
+  currentVoicingIndex: -1,
   customExtraName: false,
   customChordNotes: [
     { string: 1, fret: 1, finger: "1", barre: 5 },
@@ -52,12 +54,12 @@ export const reducer = (state: State = initialState, action: any): State => {
   switch (action.type) {
     case actionTypes.CHANGE_KEY:
       newState.chordNames = keys[action.key][state.currentChord].chordNames;
-
       newState.chordNotes =
         keys[action.key][state.currentChord].chordNotes[
           state.settings.instrument.text
         ];
       newState.currentKey = action.key;
+      newState.currentVoicingIndex = -1;
       break;
     case actionTypes.CHANGE_CHORD:
       newState.chordNames = keys[state.currentKey][action.chord].chordNames;
@@ -66,7 +68,24 @@ export const reducer = (state: State = initialState, action: any): State => {
           state.settings.instrument.text
         ];
       newState.currentChord = action.chord;
+      newState.currentVoicingIndex = -1;
       break;
+    case actionTypes.CHANGE_VOICING: {
+      const idx: number = action.index;
+      newState.currentVoicingIndex = idx;
+      if (idx === -1) {
+        newState.chordNotes =
+          keys[state.currentKey][state.currentChord].chordNotes[
+            state.settings.instrument.text
+          ];
+      } else {
+        const voicings = getVoicings(state.currentKey, state.currentChord);
+        if (voicings && idx < voicings.length) {
+          newState.chordNotes = voicings[idx].notes;
+        }
+      }
+      break;
+    }
     case actionTypes.CHANGE_MODE:
       switch (action.mode) {
         case INSTRUMENTS.guitar.text: {
@@ -78,6 +97,7 @@ export const reducer = (state: State = initialState, action: any): State => {
               INSTRUMENTS.guitar.text
             ];
           newState.custom = false;
+          newState.currentVoicingIndex = -1;
           break;
         }
         case INSTRUMENTS.ukulele.text: {
@@ -89,6 +109,7 @@ export const reducer = (state: State = initialState, action: any): State => {
               INSTRUMENTS.ukulele.text
             ];
           newState.custom = false;
+          newState.currentVoicingIndex = -1;
           break;
         }
         default: {
@@ -266,9 +287,38 @@ export const reducer = (state: State = initialState, action: any): State => {
       });
       break;
     }
+    // ADD_NOTE_AT
+    case actionTypes.ADD_NOTE_AT: {
+      newCustomChordNotes.push({
+        string: action.string,
+        fret: action.fret,
+        finger: null,
+        barre: action.barre ?? null
+      });
+      break;
+    }
+    // UPDATE_NOTE (drag-move an existing note)
+    case actionTypes.UPDATE_NOTE: {
+      const updated = { ...newCustomChordNotes[action.index] };
+      updated.string = action.string;
+      updated.fret = action.fret;
+      newCustomChordNotes[action.index] = updated;
+      break;
+    }
     // DELETE_NOTE
     case actionTypes.DELETE_NOTE: {
       newCustomChordNotes.splice(action.index, 1);
+      break;
+    }
+    // MOVE_NOTE
+    case actionTypes.MOVE_NOTE: {
+      const { index, direction } = action;
+      const target = index + direction;
+      if (target >= 0 && target < newCustomChordNotes.length) {
+        const tmp = newCustomChordNotes[index];
+        newCustomChordNotes[index] = newCustomChordNotes[target];
+        newCustomChordNotes[target] = tmp;
+      }
       break;
     }
     default:
@@ -278,6 +328,7 @@ export const reducer = (state: State = initialState, action: any): State => {
     ...newState,
     chordNames: newState.chordNames,
     chordNotes: newState.chordNotes,
+    currentVoicingIndex: newState.currentVoicingIndex,
     customSettings: newCustomSettings,
     customChordNotes: newCustomChordNotes,
     customChordNames: newCustomChordNames

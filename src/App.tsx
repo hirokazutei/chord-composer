@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Body from "./components/Body";
+import ChordSequence from "./components/ChordSequence";
 import { PALETTE } from "./constants/palette";
 
 const styles = {
@@ -13,11 +14,15 @@ const styles = {
   },
 };
 
-const App = () => (
-  <div style={styles.app}>
-    <Header />
-    <Body />
-  </div>
-);
+const App = () => {
+  const [sequenceOpen, setSequenceOpen] = useState(false);
+  return (
+    <div style={styles.app}>
+      <Header onOpenSequence={() => setSequenceOpen(true)} />
+      <Body />
+      {sequenceOpen && <ChordSequence onClose={() => setSequenceOpen(false)} />}
+    </div>
+  );
+};
 
 export default App;

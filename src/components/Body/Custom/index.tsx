@@ -3,6 +3,7 @@ import ModeChanger from "../ModeChanger";
 import NameSelector from "./NameSelector";
 import NeckSelector from "./NeckSelector";
 import NoteSelector from "./NoteSelector";
+import ChordIdentifier from "./ChordIdentifier";
 
 const styles = {
   custom: {
@@ -19,6 +20,7 @@ const Custom = () => (
   <div style={styles.custom}>
     <ModeChanger />
     <NeckSelector />
+    <ChordIdentifier />
     <NameSelector />
     <NoteSelector />
   </div>

@@ -1,8 +1,113 @@
 import * as CONST from "../../../../constants";
 import * as tools from "./sketch";
 
+// How far above TOP_SPACE the open-string zone extends
+const OPEN_ZONE_HEIGHT = 50;
+
+type DragState =
+  | { type: "move"; index: number; origString: number; origFret: number; curString: number; curFret: number }
+  | { type: "new"; startString: number; startFret: number; curString: number; curFret: number };
+
+function mouseToPos(mx: number, my: number, settings: any): { string: number; fret: number } | null {
+  const { frets, startingFret, instrument } = settings;
+  if (mx < CONST.NECK_WIDTH_MARGIN || mx > CONST.WIDTH - CONST.NECK_WIDTH_MARGIN) return null;
+  if (my > CONST.TOP_SPACE + CONST.NECK_HEIGHT) return null;
+
+  const stringSpacing = CONST.NECK_WIDTH / (instrument.strings - 1);
+  const str = Math.max(0, Math.min(instrument.strings - 1, Math.round((mx - CONST.NECK_WIDTH_MARGIN) / stringSpacing)));
+
+  // Open-string zone: above the nut but within OPEN_ZONE_HEIGHT of it
+  if (my < CONST.TOP_SPACE) {
+    if (my >= CONST.TOP_SPACE - OPEN_ZONE_HEIGHT) {
+      return { string: str, fret: 0 };
+    }
+    return null;
+  }
+
+  const fretSpacing = CONST.NECK_HEIGHT / frets;
+  const fret = Math.ceil((my - CONST.TOP_SPACE) / fretSpacing) + startingFret - 1;
+  return { string: str, fret };
+}
+
+function hitTestNotes(mx: number, my: number, notes: any[], settings: any): number {
+  const { frets, startingFret, instrument } = settings;
+  const stringSpacing = CONST.NECK_WIDTH / (instrument.strings - 1);
+  const fretSpacing = CONST.NECK_HEIGHT / frets;
+  const threshold = CONST.SIZE.note + 4;
+
+  for (let i = 0; i < notes.length; i++) {
+    const { string: s, fret: f } = notes[i];
+    let nx: number, ny: number;
+
+    if (!f) {
+      // Open note rendered above the nut
+      nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * s;
+      ny = CONST.TOP_SPACE - CONST.SPACING.openNote;
+    } else {
+      const nf = f - startingFret + 1;
+      if (nf <= 0 || nf > frets) continue;
+      nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * s;
+      ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+    }
+
+    if (Math.abs(mx - nx) <= threshold && Math.abs(my - ny) <= threshold) return i;
+  }
+  return -1;
+}
+
+function drawDragOverlay(p: any, drag: DragState, settings: any) {
+  const { frets, startingFret, instrument } = settings;
+  const stringSpacing = CONST.NECK_WIDTH / (instrument.strings - 1);
+  const fretSpacing = CONST.NECK_HEIGHT / frets;
+
+  p.push();
+  p.noStroke();
+
+  if (drag.type === "move") {
+    if (drag.curFret === 0) {
+      // Preview open note above the nut
+      const nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * drag.curString;
+      const ny = CONST.TOP_SPACE - CONST.SPACING.openNote;
+      p.fill(80, 80, 80, 180);
+      p.ellipse(nx, ny, CONST.SIZE.openNote);
+    } else {
+      const nf = drag.curFret - startingFret + 1;
+      if (nf > 0 && nf <= frets) {
+        const nx = CONST.NECK_WIDTH_MARGIN + stringSpacing * drag.curString;
+        const ny = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+        p.fill(80, 80, 80, 180);
+        p.ellipse(nx, ny, CONST.SIZE.note);
+      }
+    }
+  } else if (drag.type === "new" && drag.startString !== drag.curString && drag.startFret !== 0) {
+    // Horizontal drag preview — show barre (not for open-zone drags)
+    const nf = drag.startFret - startingFret + 1;
+    if (nf > 0 && nf <= frets) {
+      const minStr = Math.min(drag.startString, drag.curString);
+      const maxStr = Math.max(drag.startString, drag.curString);
+      const y = CONST.TOP_SPACE + fretSpacing * (nf - 0.5);
+      p.fill(80, 80, 80, 180);
+      p.ellipse(CONST.NECK_WIDTH_MARGIN + stringSpacing * minStr, y, CONST.SIZE.note);
+      p.ellipse(CONST.NECK_WIDTH_MARGIN + stringSpacing * maxStr, y, CONST.SIZE.note);
+      p.rectMode(p.CORNERS);
+      p.rect(
+        CONST.NECK_WIDTH_MARGIN + stringSpacing * minStr,
+        y + CONST.SIZE.note,
+        CONST.NECK_WIDTH_MARGIN + stringSpacing * maxStr,
+        y - CONST.SIZE.note
+      );
+    }
+  }
+
+  p.pop();
+}
+
 export default function sketch(p: any) {
-  p.onSetAppState = () => {};
+  p.onNoteClick = (_s: number, _f: number, _barre?: number) => {};
+  p.onMoveNote = (_index: number, _string: number, _fret: number) => {};
+  p.onDeleteNote = (_index: number) => {};
+
+  let drag: DragState | null = null;
 
   p.setup = function () {
     p.createCanvas(CONST.WIDTH, CONST.HEIGHT);
@@ -28,6 +133,74 @@ export default function sketch(p: any) {
       tools.renderChordName(p, customChordNames);
       tools.renderChordNotes(p, customChordNotes, customSettings);
       tools.renderStartingFretText(p, customSettings);
+      if (drag) {
+        p.ellipseMode(p.RADIUS);
+        drawDragOverlay(p, drag, customSettings);
+      }
+    }
+  };
+
+  p.mousePressed = function () {
+    if (!p.props.custom) return;
+    const { customSettings, customChordNotes } = p.props;
+    const hitIndex = hitTestNotes(p.mouseX, p.mouseY, customChordNotes, customSettings);
+    if (hitIndex >= 0) {
+      const n = customChordNotes[hitIndex];
+      drag = { type: "move", index: hitIndex, origString: n.string, origFret: n.fret ?? 0, curString: n.string, curFret: n.fret ?? 0 };
+    } else {
+      const pos = mouseToPos(p.mouseX, p.mouseY, customSettings);
+      if (pos) {
+        drag = { type: "new", startString: pos.string, startFret: pos.fret, curString: pos.string, curFret: pos.fret };
+      }
+    }
+  };
+
+  p.mouseDragged = function () {
+    if (!drag || !p.props.custom) return;
+    const pos = mouseToPos(p.mouseX, p.mouseY, p.props.customSettings);
+    if (pos) {
+      drag.curString = pos.string;
+      drag.curFret = pos.fret;
+    }
+  };
+
+  p.mouseReleased = function () {
+    if (!drag || !p.props.custom) return;
+    const { customChordNotes } = p.props;
+    const d = drag;
+    drag = null;
+
+    if (d.type === "move") {
+      if (d.curString !== d.origString || d.curFret !== d.origFret) {
+        // Moved to a new position
+        p.onMoveNote(d.index, d.curString, d.curFret);
+      } else {
+        // Clicked without moving — delete the note
+        p.onDeleteNote(d.index);
+      }
+    } else {
+      const sameFret = d.curFret === d.startFret;
+      const sameString = d.curString === d.startString;
+
+      if (d.startFret === 0) {
+        // Started in the open zone — always add an open note (no barre for open strings)
+        const exists = customChordNotes.some((n: any) => n.string === d.startString && n.fret === 0);
+        if (!exists) p.onNoteClick(d.startString, 0);
+      } else if (sameString) {
+        // Plain click on the neck: add note
+        const exists = customChordNotes.some((n: any) => n.string === d.startString && n.fret === d.startFret);
+        if (!exists) p.onNoteClick(d.startString, d.startFret);
+      } else if (sameFret) {
+        // Horizontal drag: create barre
+        const minStr = Math.min(d.startString, d.curString);
+        const maxStr = Math.max(d.startString, d.curString);
+        const exists = customChordNotes.some((n: any) => n.string === minStr && n.fret === d.startFret);
+        if (!exists) p.onNoteClick(minStr, d.startFret, maxStr);
+      } else {
+        // Diagonal drag: add at release position
+        const exists = customChordNotes.some((n: any) => n.string === d.curString && n.fret === d.curFret);
+        if (!exists) p.onNoteClick(d.curString, d.curFret);
+      }
     }
   };
 }

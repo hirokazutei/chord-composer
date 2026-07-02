@@ -35,6 +35,7 @@ export type State = {
   settings: Settings;
   currentKey: string;
   currentChord: string;
+  currentVoicingIndex: number;
   customExtraName: ExtraName;
   customChordNotes: ChordNote[];
   customChordNames: ChordName[];
